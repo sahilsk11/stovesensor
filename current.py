@@ -31,7 +31,6 @@ def read_temp():
         temp_string = lines[1][equals_pos+2:]
         temp_c = float(temp_string) / 1000.0
         temp_f = temp_c * 9.0 / 5.0 + 32.0
-        upload_value(temp_f)
         return temp_c, temp_f
     
 def upload_value(temperature):
@@ -56,8 +55,9 @@ def upload_estimate(type, temperature):
         db.commit()
     
 def gas_on(temperature):
-    last_value = get_value("calculated", "time", 1)[1]
-    max = -1
+    last_value = get_value("calculated", "time", 1)
+    if (last_value == None):
+        return False
     fire_on = temperature >= 90  
     if (temperature < 75):
         upload_estimate("off", temperature)
@@ -81,6 +81,7 @@ def gas_on(temperature):
 
 while True:
     temperature_f = read_temp()[1]
+    upload_value(temperature_f)
     print(temperature_f)
     print(gas_on(temperature_f))
     time.sleep(120)
