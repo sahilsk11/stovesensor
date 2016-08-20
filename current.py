@@ -47,41 +47,25 @@ def get_value(table, column, values):
     return previous
     
 def upload_estimate(type, temperature):
-    previous = get_value("calculated", "time", 1)[1]
-    if (previous != type):
-        time = datetime.datetime.now()
-        script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
-        cursor.execute(script)
-        db.commit()
+    previous = get_value("calculated", "time", 1)
+    if (previous != None):
+        if (previous != type):
+            time = datetime.datetime.now()
+            script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
+            cursor.execute(script)
+            db.commit()
     
 def gas_on(temperature):
-    last_value = get_value("calculated", "time", 1)
+    last_value = get_value("calculated", "time", 1) #return the last calculated value
     if (last_value == None):
         return False
-    fire_on = temperature >= 90  
-    if (temperature < 75):
-        upload_estimate("off", temperature)
-        return False
-    if (temperature > 120):
-        upload_estimate("on", temperature)
-        return True
-    if (last_value == "on" and fire_on):
-        return True
-    elif (last_value =="on" and not fire_on):
-        upload_estimate("off", temperature)
-        return False
-    elif (last_value == "off" and fire_on):
-        upload_estimate("on", temperature)
-        return True
-    elif (last_value == "off" and  not fire_on):
-        upload_estimate("off", temperature)
-        return False
-    upload_estimate("off", temperature)
-    return False
+    print last_value
+    
 
 while True:
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
     print(gas_on(temperature_f))
-    time.sleep(120)
+    upload_estimate("type", temperature)
+    time.sleep(30)
