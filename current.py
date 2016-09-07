@@ -3,9 +3,8 @@ import time
 import MySQLdb
 import datetime
 import passwords
-from distutils.command.upload import upload
-
-
+import notification
+import pprint
 
 db = MySQLdb.connect("localhost", "gassensor", passwords.sql(), "gas")
 cursor = db.cursor()
@@ -41,31 +40,51 @@ def upload_value(temperature):
     
 def get_value(table, column, values):
     values = str(values)
-    get_information = "SELECT * from gas." + table + " order by " + column + " desc limit " + values
+    get_information = "SELECT " + column + " from gas." + table + " order by time desc limit " + values
     cursor.execute(get_information)
     previous = cursor.fetchone()
-    return previous
+    if (previous == None):
+        return None
+    return previous[0]
     
 def upload_estimate(type, temperature):
-    previous = get_value("calculated", "time", 1)
-    if (previous != None):
-        if (previous != type):
-            time = datetime.datetime.now()
-            script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
-            cursor.execute(script)
-            db.commit()
-    
+    previous = get_value("calculated", "status", 1)
+    if (previous == None or previous != type):
+        time = datetime.datetime.now()
+        script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
+        cursor.execute(script)
+        db.commit()
+
 def gas_on(temperature):
-    last_value = get_value("calculated", "time", 1) #return the last calculated value
-    if (last_value == None):
-        return False
-    print last_value
+    last_value = get_value("temperatures", "temperature", 1) #return the last calculated value
+    if (temperature > 100):
+        return True
+    if (temperature < 80):
+            return False
+    if (last_value != None):
+        if (temperature - last_value >= 3):
+            return True
     
+def gas_left_on(temperature):
+    if (gas_on(temperature)):
+        last_value = get_value("calculated", "status", 1)
+        if (last_value[0] == "ON"):
+            on_time = get_value("calculated", "time", 1)
+            if (datetime.datetime.now() - datetime.timedelta(minutes=20) > on_time):
+                return True
+    return False
 
 while True:
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
-    print(gas_on(temperature_f))
-    upload_estimate("type", temperature)
+    if (gas_on(temperature_f)):
+        type = "ON"
+        notification.send_email('PHONE_NUMBER')
+    else:
+        type = "OFF"
+    upload_estimate(type, temperature_f)
+    print type
+    if (gas_left_on(temperature_f)):
+        print "alert"       
     time.sleep(30)
