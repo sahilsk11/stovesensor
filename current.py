@@ -5,7 +5,8 @@ import datetime
 import passwords
 import notification
 import pprint
-from __builtin__ import False
+
+numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
 db = MySQLdb.connect("localhost", "gassensor", passwords.sql(), "gas")
 cursor = db.cursor()
@@ -85,11 +86,8 @@ def gas_left_on(temperature):
                 return True
     return False
 
-numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
-
 def send_notifications(users):
     for user in range (0, len(users)):
-        print 
         n = notification.notification(user["number"], user["provider"])
         n.send_email()
 
@@ -101,6 +99,5 @@ while True:
     upload_estimate(type, temperature_f)
     print type
     if (gas_left_on(temperature_f)):
-        n =  notifcation.notification(passwords.number(), 'tmomail.net')
-        n.send_email()
+        send_notifications(numbers)
     time.sleep(30)

@@ -37,8 +37,4 @@ class notification:
         session.login(GMAIL_USERNAME, GMAIL_PASSWORD)
         
         session.sendmail(GMAIL_USERNAME, recipient, headers + "\r\n\r\n" + emailText)
-        session.quit()  
-        
-if (__name__ == "___main___"):
-    m = notification.notication(passwords.number(), 'tmomail.net')
-    m.send_email()
+        session.quit()
