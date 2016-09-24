@@ -5,6 +5,7 @@ import datetime
 import passwords
 import notification
 import pprint
+from __builtin__ import False
 
 db = MySQLdb.connect("localhost", "gassensor", passwords.sql(), "gas")
 cursor = db.cursor()
@@ -57,14 +58,24 @@ def upload_estimate(type, temperature):
 
 def gas_on(temperature):
     last_value = get_value("temperatures", "temperature", 1) #return the last calculated value
-    if (temperature > 100):
-        return True
-    if (temperature < 80):
-            return False
+    #Check for last temperature change
     if (last_value != None):
+        #Temperature went down by 3 degrees
         if (temperature - last_value >= 3):
-            return True
-    
+            return "MAYBE"
+        #Temperature went up by 5 degrees
+        if (last_value - temperature >= 5):
+            return "ON"
+    #Temperature above 100
+    if (temperature > 100):
+        return "ON"
+    #Temperature between 100 and 80, but will happen if previous conditions are false
+    if (temperature <= 100 and temperature >= 80):
+        return "MAYBE"
+    #Temperature below 80
+    if (temperature < 80):
+            return "OFF"
+
 def gas_left_on(temperature):
     if (gas_on(temperature)):
         last_value = get_value("calculated", "status", 1)
@@ -74,17 +85,22 @@ def gas_left_on(temperature):
                 return True
     return False
 
+numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
+
+def send_notifications(users):
+    for user in range (0, len(users)):
+        print 
+        n = notification.notification(user["number"], user["provider"])
+        n.send_email()
+
 while True:
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
-    if (gas_on(temperature_f)):
-        type = "ON"
-        notification.send_email('PHONE_NUMBER')
-    else:
-        type = "OFF"
+    type = gas_on(temperature_f)
     upload_estimate(type, temperature_f)
     print type
     if (gas_left_on(temperature_f)):
-        print "alert"       
+        n =  notifcation.notification(passwords.number(), 'tmomail.net')
+        n.send_email()
     time.sleep(30)

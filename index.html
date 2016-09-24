@@ -1,47 +1,103 @@
 <html lang="en">
 	<head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
 		<link href="bootstrap.css" rel="stylesheet">
-		<script src="jquery.min.js"></script>
-		<script src="bootstrap.js"></script>
+        <link href="organize.css" rel="stylesheet">
+
+        <link href="font.css" rel="stylesheet">
+
+        <title>Stove Sensor</title>
+
+        <script>
+            var temperature = 95;
+            var status = "OFF";
+            var last_off = "";
+
+            function changeTempColor(temp) {
+                document.getElementById("temperature").innerHTML = temp + "°F";
+                if (status == "OFF") {
+                    document.getElementById("temperature").style.color="#3B60F5";
+                }
+                else if (status == "MAYBE") {
+                    document.getElementById("temperature").style.color="#D9B62B";
+                }
+                else {
+                    document.getElementById("temperature").style.color="#D43737";
+                }
+            }
+
+            function getChartDimensions() {
+                var chart = document.getElementById("chart");
+                var width = document.getElementById("chart").style.width;
+                var height = document.getElementById("chart").style.height;
+                return {width, height}
+            }
+
+            function changeStatus(stat) {
+                var response;
+                if (stat == "ON") {
+                    response = "Your stove has been on since ";
+                }
+                else if (stat == "MAYBE") {
+                    response = "Your stove could be either warming up, cooling, or on low heat."
+                }
+                else {
+                    response = "Your stove is off."
+                }
+                document.getElementById("stat").innerHTML = response;
+            }
+
+            function checkWidth() {
+                var width = window.innerWidth;
+                if (width < 450) {
+                    document.getElementById("temperature").style.fontSize = "40px";
+                    document.getElementById("stat").style.fontSize = "20px";
+                    document.getElementById("header").style="right:10px;";
+                }
+                else if (width > 900) {
+                    document.getElementById("temperature").style.fontSize = "95px";
+                    document.getElementById("stat").style.fontSize = "30px";
+                    document.getElementById("header").style="left:10px;"
+                }
+                else {
+                    document.getElementById("temperature").style.fontSize = "10vw";
+                    document.getElementById("stat").style.fontSize = "3vw";
+                    document.getElementById("header").style="left:10px;"
+                }
+            }
+
+            function showData() {
+                document.getElementById("table").display = "block";
+                document.getElementById("chart").display = "block";
+                document.getElementById("wait").hidden = "none";
+            }
+
+            function run() {
+                changeTempColor(temperature);
+                changeStatus(status);
+                checkWidth();
+                showData();
+                console.log(getChartDimensions())
+            }
+        </script>
 	</head>
 
-	<body>
-		<nav class="navbar navbar-default navbar-fixed-top relative-container" role="navigation">
-            <div class="container">
-                <div class="navbar-header page-scroll">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand page-scroll" href="#page-top">
-                        <span><img src="Images/secondicon.png" class="icon"></span>
-                        <span class="title-text">Harker Red Cross</span>
-                    </a>
-                </div>
+	<body onload="run()" onresize="checkWidth()">
+        <img src="background.png" class="background">
+        <div class="title" id="header">Stove <b class="red">Sensor</b></div>
+        <table id="table" class="center" width="80%" display="none">
+            <tr>
+                <td id="temperature" width="50%" class="text-center temp">Current Temperature</td>
+                <td id="stat" width="50%" class="text-center status">Current Status</td>
+            </tr>
+        </table>
 
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                        <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
-                        <li class="hidden">
-                            <a class="page-scroll" href="#page-top"></a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="#about">About</a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="#services">Services</a>
-                        </li>
-                        <li>
-                            <a class="page-scroll" href="#contact">Contact</a>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /.navbar-collapse -->
-            </div>
-            <!-- /.container -->
-        </nav>
+        <hr class="hr">
+
+        <div id="chart"></div>
+
+        <img src="squares.gif" class="wait-gif" id="wait">
+
 	</body>
 </html>
