@@ -9,6 +9,8 @@
 
         <title>Stove Sensor</title>
 
+        <script src="XHRequest.js"></script>
+
         <script>
             var temperature = 95;
             var status = "OFF";
@@ -53,17 +55,14 @@
                 if (width < 450) {
                     document.getElementById("temperature").style.fontSize = "40px";
                     document.getElementById("stat").style.fontSize = "20px";
-                    document.getElementById("header").style="right:10px;";
                 }
                 else if (width > 900) {
                     document.getElementById("temperature").style.fontSize = "95px";
                     document.getElementById("stat").style.fontSize = "30px";
-                    document.getElementById("header").style="left:10px;"
                 }
                 else {
                     document.getElementById("temperature").style.fontSize = "10vw";
                     document.getElementById("stat").style.fontSize = "3vw";
-                    document.getElementById("header").style="left:10px;"
                 }
             }
 
@@ -78,26 +77,26 @@
                 changeStatus(status);
                 checkWidth();
                 showData();
-                console.log(getChartDimensions())
             }
         </script>
 	</head>
 
 	<body onload="run()" onresize="checkWidth()">
         <img src="background.png" class="background">
-        <div class="title" id="header">Stove <b class="red">Sensor</b></div>
+        <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
         <table id="table" class="center" width="80%" display="none">
             <tr>
-                <td id="temperature" width="50%" class="text-center temp">Current Temperature</td>
-                <td id="stat" width="50%" class="text-center status">Current Status</td>
+                <td id="temperature" width="50%" class="text-center temp">--</td>
+                <td id="stat" width="50%" class="text-center status">--</td>
             </tr>
         </table>
+
+        <img src="squares.gif" class="wait-gif" id="wait">
 
         <hr class="hr">
 
         <div id="chart"></div>
 
-        <img src="squares.gif" class="wait-gif" id="wait">
 
 	</body>
 </html>
