@@ -16,6 +16,21 @@
             var status = "OFF";
             var last_off = "";
 
+            function getElements() {
+                alert("");
+                XHRequest.createRequest({
+                    success: setElements,
+                    params: {
+                        page_load: "true"
+                    },
+                    url: "ajax.py"
+                })
+            }
+
+            function setElements(xhr, xhrConfig) {
+                console.log(JSON.parse(xhr.responseText));
+            }
+
             function changeTempColor(temp) {
                 document.getElementById("temperature").innerHTML = temp + "°F";
                 if (status == "OFF") {
@@ -76,7 +91,7 @@
                 changeTempColor(temperature);
                 changeStatus(status);
                 checkWidth();
-                showData();
+                getElements();
             }
         </script>
 	</head>
