@@ -2,7 +2,6 @@
 
 print "Content-type: application/json\n\n"
 
-import operations
 import cgi
 import json
 import datetime
@@ -15,7 +14,7 @@ temperature = current.read_temp()[1]
 
 if (page_load != ""):
     (status, time) = current.gas_on(temperature)
-    d = {"temperature":temperature, "status": status, "on_time":time}
+    d = {"temperature":temperature, "status": status, "on_time":time, "current_time":datetime.datetime.now()}
     j = json.dumps(d)
     print j
     

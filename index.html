@@ -12,9 +12,6 @@
         <script src="XHRequest.js"></script>
 
         <script>
-            var temperature = 95;
-            var status = "OFF";
-            var last_off = "";
 
             function getElements() {
                 alert("");
@@ -24,14 +21,24 @@
                         page_load: "true"
                     },
                     url: "ajax.py"
-                })
+                });
             }
 
             function setElements(xhr, xhrConfig) {
-                console.log(JSON.parse(xhr.responseText));
+                var data = JSON.parse(xhr.responseText);
+                var temperature = data.temperature;
+                var status = data.status;
+                var last_off = data.on_time;
+                loadPageStyle(temperature, status, last_off);
             }
 
-            function changeTempColor(temp) {
+            function loadPageStyle(temperature, status, last_off) {
+                changeStatus(status);
+                changeTempColor(temperature, status);
+                showData();
+            }
+
+            function changeTempColor(temp, status) {
                 document.getElementById("temperature").innerHTML = temp + "°F";
                 if (status == "OFF") {
                     document.getElementById("temperature").style.color="#3B60F5";
@@ -88,10 +95,8 @@
             }
 
             function run() {
-                changeTempColor(temperature);
-                changeStatus(status);
-                checkWidth();
                 getElements();
+                checkWidth();
             }
         </script>
 	</head>
