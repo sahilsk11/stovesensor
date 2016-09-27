@@ -92,7 +92,7 @@ def send_notifications(users):
         n = notification.notification(user["number"], user["provider"])
         n.send_email()
 
-while True:
+def run():
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
