@@ -50,8 +50,8 @@
                 var status = data.status;
                 var lastoff = data.on_time;
                 var updatetime = data.update_time;
-                console.log(updatetime);
                 loadPageStyle(temperature, status, lastoff);
+                displayUpdateTime(updatetime);
             }
 
             function loadPageStyle(temperature, status, lastoff) {
