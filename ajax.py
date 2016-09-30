@@ -18,7 +18,9 @@ if (command == "pageload"):
         on_time = on_time.strftime("%I:%M %p")
     else:
         on_time = "none"
-    d = {"temperature":temperature, "status": status, "on_time":on_time}
+    time = datetime.datetime.now()
+    time = time.strftime("%d/%m/%y, %H:%M %p")
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time}
     j = json.dumps(d)
     print j
     

@@ -62,6 +62,11 @@
 	width: 100%;
 }
 
+.update-time {
+	padding-left: 20px;
+	font-family: 'Open Sans', sans-serif;
+}
+
 #chart {
 	margin: auto;
 	display: block;

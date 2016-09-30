@@ -1,5 +1,6 @@
 <html lang="en">
 	<head>
+        <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
 		<link href="bootstrap.css" rel="stylesheet">
@@ -48,6 +49,7 @@
                 var temperature = data.temperature;
                 var status = data.status;
                 var lastoff = data.on_time;
+                var updatetime = data.update_time;
                 loadPageStyle(temperature, status, lastoff);
             }
 
@@ -57,8 +59,12 @@
                 showData();
             }
 
+            function displayUpdateTime(time) {
+                document.getElementById("last-update").innerHTML = "Last updated at " + time;
+            }
+
             function showTemperature(temp, status) {
-                document.getElementById("temperature").innerHTML = Math.round(temp) + "°F";
+                document.getElementById("temperature").innerHTML = Math.round(temp) + "&#176;F";
                 if (status == "OFF") {
                     document.getElementById("temperature").style.color="#3B60F5";
                 }
@@ -123,12 +129,16 @@
             </tr>
         </table>
 
+        <hr class="hr">
+
+        <p class="update-time" id="last-update">--</p>
+
         <div id="wait" class="loading">
             <img src="squares.gif" class="wait-gif" id="wait">
             <h5 class="text-center">The data is loading...</h5>
         </div>
 
-        <hr class="hr">
+
 
         <div id="chart"></div>
 
