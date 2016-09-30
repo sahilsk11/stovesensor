@@ -6,6 +6,7 @@ import cgi
 import json
 import datetime
 import current
+import chart
 
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
@@ -21,6 +22,12 @@ if (command == "pageload"):
     time = datetime.datetime.now()
     time = time.strftime("%I:%M %p on %m/%d/%y")
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time}
+    j = json.dumps(d)
+    print j
+
+if (command = "getchart"):
+    html_text = chart.print_html()
+    d = {"html":html_text}
     j = json.dumps(d)
     print j
     

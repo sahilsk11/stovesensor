@@ -44,6 +44,20 @@
                 });
             }
 
+            function showChart() {
+                XHRequest.createRequest({
+                    success: printChart,
+                    params: {
+                        command: "getchart"
+                    },
+                    url: "/cgi-bin/gassensor/chart.py"
+                });
+            }
+
+            function printChart(xhr, xhrConfig) {
+                document.getElementById("chart").innerHTML = xhr.responseText;
+            }
+
             function setElements(xhr, xhrConfig) {
                 var data = JSON.parse(xhr.responseText);
                 var temperature = data.temperature;

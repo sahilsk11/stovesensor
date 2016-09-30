@@ -1,4 +1,4 @@
-#!usr/bin/python
+#!/usr/bin/python
 
 import fusionCharts
 import MySQLdb
@@ -38,8 +38,9 @@ def get_temperature_data(cursor, db):
     result = cursor.fetchall()
     return result
 
-print "Content-type: text/html\n\n"
-print "<script src='fusioncharts.js'></script>"
-print "<html>"
-data = get_temperatures()
-print create_chart(data) + "</html>"
+def print_html():
+    print "Content-type: text/html\n\n"
+    print "<script src='/fusioncharts/js/fusioncharts.js'></script>"
+    print "<html>"
+    data = get_temperatures()
+    print create_chart(data) + "</html>"
