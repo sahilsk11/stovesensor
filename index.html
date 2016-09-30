@@ -9,16 +9,35 @@
 
         <title>Stove Sensor</title>
 
+        <link rel="icon" href="icon.png">
+
         <script src="XHRequest.js"></script>
 
         <script>
 
+            function getLastValues() {
+                XHRequest.createRequest({
+                    success: displayLast,
+                    params: {
+                        command: "lastvalue"
+                    },
+                    url: "/cgi-bin/gassensor/ajax.py"
+                });
+            }
+
+            function displayLast(xhr, xhrConfig) {
+                var data = JSON.parse(xhr.responseText);
+                var temperature = data.temperature;
+                var status = data.status;
+                var last_off = data.on_time;
+                loadPageStyle(temperature, status, last_off);
+            }
+
             function getElements() {
-                alert("");
                 XHRequest.createRequest({
                     success: setElements,
                     params: {
-                        page_load: "true"
+                        command: "pageload"
                     },
                     url: "/cgi-bin/gassensor/ajax.py"
                 });
@@ -28,18 +47,18 @@
                 var data = JSON.parse(xhr.responseText);
                 var temperature = data.temperature;
                 var status = data.status;
-                var last_off = data.on_time;
-                loadPageStyle(temperature, status, last_off);
+                var lastoff = data.on_time;
+                loadPageStyle(temperature, status, lastoff);
             }
 
-            function loadPageStyle(temperature, status, last_off) {
-                changeStatus(status);
-                changeTempColor(temperature, status);
+            function loadPageStyle(temperature, status, lastoff) {
+                changeStatus(status, lastoff);
+                showTemperature(temperature, status);
                 showData();
             }
 
-            function changeTempColor(temp, status) {
-                document.getElementById("temperature").innerHTML = temp + "°F";
+            function showTemperature(temp, status) {
+                document.getElementById("temperature").innerHTML = Math.round(temp) + "°F";
                 if (status == "OFF") {
                     document.getElementById("temperature").style.color="#3B60F5";
                 }
@@ -51,17 +70,10 @@
                 }
             }
 
-            function getChartDimensions() {
-                var chart = document.getElementById("chart");
-                var width = document.getElementById("chart").style.width;
-                var height = document.getElementById("chart").style.height;
-                return {width, height}
-            }
-
-            function changeStatus(stat) {
+            function changeStatus(stat, lastoff) {
                 var response;
                 if (stat == "ON") {
-                    response = "Your stove has been on since ";
+                    response = "Your stove has been on since " + lastoff + ".";
                 }
                 else if (stat == "MAYBE") {
                     response = "Your stove could be either warming up, cooling, or on low heat."
@@ -111,7 +123,10 @@
             </tr>
         </table>
 
-        <img src="squares.gif" class="wait-gif" id="wait">
+        <div id="wait" class="loading">
+            <img src="squares.gif" class="wait-gif" id="wait">
+            <h5 class="text-center">The data is loading...</h5>
+        </div>
 
         <hr class="hr">
 

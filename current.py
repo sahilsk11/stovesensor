@@ -78,18 +78,18 @@ def gas_on(temperature):
     if (temperature < 80):
             return ("OFF", "none")
 
-def gas_left_on(temperature):
-    if (gas_on(temperature)):
+def gas_left_on(temperature, status):
+    if (status == "ON"):
         last_value = get_value("calculated", "status", 1)
-        if (last_value[0] == "ON"):
+        if (last_value == "ON"):
             on_time = get_value("calculated", "time", 1)
             if (datetime.datetime.now() - datetime.timedelta(minutes=20) > on_time):
                 return (True, on_time)
     return (False, None)
 
 def send_notifications(users):
-    for user in range (0, len(users)):
-        n = notification.notification(user["number"], user["provider"])
+    for user in users:
+        n = notification.notification(str(user["number"]), user["provider"])
         n.send_email()
 
 def run():
@@ -99,6 +99,6 @@ def run():
     type = gas_on(temperature_f)[0]
     upload_estimate(type, temperature_f)
     print type
-    if (gas_left_on(temperature_f)[0]):
+    if (gas_left_on(temperature_f, type)[0]):
         send_notifications(numbers)
-    time.sleep(30)
+    time.sleep(60)

@@ -15,7 +15,7 @@ class notification:
         GMAIL_USERNAME = 'iotspace.tech@gmail.com'
         GMAIL_PASSWORD = passwords.email() #CAUTION: This is stored in plain text!
         
-        recipient = number+'@' + provider
+        recipient = self.number+'@' + self.provider
         subject = 'Gas Monitor'
         emailText = 'Alert! Your gas may be on.'
         

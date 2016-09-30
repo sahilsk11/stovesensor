@@ -47,7 +47,7 @@
 	font-size: 20px;
 }
 
-.wait-gif {
+.loading {
 	width: 20%;
 	max-width: 190px;
 	min-width: 70px;
@@ -56,6 +56,10 @@
 	left: 0px;
 	right: 0px;
 	padding-top: 5%;
+}
+
+.wait-gif {
+	width: 100%;
 }
 
 #chart {
