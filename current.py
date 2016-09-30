@@ -89,7 +89,7 @@ def gas_left_on(temperature, status):
 
 def send_notifications(users):
     for user in users:
-        n = notification.notification(str(user["number"]), user["provider"])
+        n = notification.notification(str(user["number"]), user["provider"], message)
         n.send_email()
 
 def run():
