@@ -5,10 +5,9 @@ import passwords
 class notification:
 
 
-    def __init__(self, phone_number, service, message):
+    def __init__(self, phone_number, service):
         self.number = phone_number
         self.provider = service
-        self.type = type
         
     def send_email(self):
         SMTP_SERVER = 'smtp.gmail.com'
@@ -18,8 +17,7 @@ class notification:
         
         recipient = self.number+'@' + self.provider
         subject = 'Gas Monitor'
-        if (type = "left_on"):
-            emailText = 'Alert! Your gas may be on.'
+        emailText = 'Alert! Your gas may be on.'
         
         emailText = "" + emailText + ""
         
