@@ -23,3 +23,9 @@ if (command == "pageload"):
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time}
     j = json.dumps(d)
     print j
+    
+if (command == "getchart"):
+    html_text = chart.print_html()
+    d = {"html":html_text}
+    json.dumps(d)
+    print j
