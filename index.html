@@ -13,7 +13,7 @@
         <link rel="icon" href="icon.png">
 
         <script src="XHRequest.js"></script>
-
+        <script src='/fusioncharts/js/fusioncharts.js'></script>
         <script>
 
             function getLastValues() {
@@ -55,7 +55,7 @@
             }
 
             function printChart(xhr, xhrConfig) {
-                document.getElementById("chart").innerHTML = xhr.responseText;
+                eval(xhr.responseText);
             }
 
             function setElements(xhr, xhrConfig) {

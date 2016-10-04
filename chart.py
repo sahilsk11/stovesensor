@@ -40,7 +40,5 @@ def get_temperature_data(cursor, db):
 
 def print_html():
     print "Content-type: text/html\n\n"
-    print "<script src='/fusioncharts/js/fusioncharts.js'></script>"
-    print "<html>"
     data = get_temperatures()
-    print create_chart(data) + "</html>"
+    print create_chart(data)
