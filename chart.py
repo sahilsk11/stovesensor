@@ -16,7 +16,7 @@ def create_chart(data, div_id="chart"):
     chart.setChartTagAttributes({"caption":"Stove Temperature", "labelStep":label_step})
     chart.addDataSeries("Temperature", data, 
                         series_attributes = {"renderAs":"column", "showValues":"0", "alpha":70})
-    html = chart.getHTML(div_id)
+    html = chart.getHTML(div_id, js_only=1)
     return html
 
 def get_temperatures():
@@ -38,7 +38,6 @@ def get_temperature_data(cursor, db):
     result = cursor.fetchall()
     return result
 
-def print_html():
-    print "Content-type: text/html\n\n"
-    data = get_temperatures()
-    print create_chart(data)
+print "Content-type: text/html\n\n"
+data = get_temperatures()
+print create_chart(data)
