@@ -33,7 +33,7 @@ def get_temperatures():
         
     
 def get_temperature_data(cursor, db):
-    run = "SELECT temperature, time from gas.temperatures order by time desc limit 100"
+    run = "SELECT temperature, time from gas.temperatures order by time desc limit 1500"
     cursor.execute(run)
     result = cursor.fetchall()
     return result

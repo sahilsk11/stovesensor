@@ -5,10 +5,11 @@ import datetime
 import passwords
 import notification
 import pprint
+from datetime import date
 
 numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
-db = MySQLdb.connect("localhost", "gassensor", passwords.sql(), "gas")
+db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "table-data")
 cursor = db.cursor()
 recent_on = 0
  
@@ -42,7 +43,7 @@ def upload_value(temperature):
     
 def get_value(table, column, values):
     values = str(values)
-    get_information = "SELECT " + column + " from gas." + table + " order by time desc limit " + values
+    get_information = "SELECT " + column + " from table-data." + table + " order by time desc limit " + values
     cursor.execute(get_information)
     previous = cursor.fetchone()
     if (previous == None):
@@ -56,6 +57,12 @@ def upload_estimate(type, temperature):
         script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
         cursor.execute(script)
         db.commit()
+
+def upload_notification(type):
+    time = datetime.datetime.now()
+    script = "insert into Notifications (type, time) values ('%s', '%s')" % (type, time)
+    cursor.execute(script)
+    db.commit()
 
 def gas_on(temperature):
     last_value = get_value("temperatures", "temperature", 1) #return the last calculated value
@@ -92,6 +99,13 @@ def send_notifications(users):
         n = notification.notification(str(user["number"]), user["provider"])
         n.send_email()
 
+def can_send_notification():
+    last_time = get_value("Notifications", "time", 1)
+    last_type = get_value("Notifications", "type", 1)
+    if (last_time == None or (last_time + datetime.timedelta(minutes=20) < datetime.datetime.now())):
+        return True
+    return False
+
 def run():
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
@@ -99,6 +113,6 @@ def run():
     type = gas_on(temperature_f)[0]
     upload_estimate(type, temperature_f)
     print type
-    if (gas_left_on(temperature_f, type)[0]):
+    if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notifications(numbers)
     time.sleep(60)

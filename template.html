@@ -3,16 +3,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link href="CSS/bootstrap.css" rel="stylesheet">
-        <link href="CSS/organize.css" rel="stylesheet">
+		<link href="bootstrap.css" rel="stylesheet">
+        <link href="organize.css" rel="stylesheet">
 
-        <link href="CSS/font.css" rel="stylesheet">
+        <link href="font.css" rel="stylesheet">
 
         <title>Stove Sensor</title>
 
-        <link rel="icon" href="Images/icon.png">
+        <link rel="icon" href="icon.png">
 
-        <script src="js/XHRequest.js"></script>
+        <script src="XHRequest.js"></script>
         <script src='/fusioncharts/js/fusioncharts.js'></script>
         <script>
 
@@ -22,7 +22,7 @@
                     params: {
                         command: "lastvalue"
                     },
-                    url: "/cgi-bin/gassensor/scripts/ajax.py"
+                    url: "/cgi-bin/gassensor/ajax.py"
                 });
             }
 
@@ -40,7 +40,7 @@
                     params: {
                         command: "pageload"
                     },
-                    url: "/cgi-bin/gassensor/scripts/ajax.py"
+                    url: "/cgi-bin/gassensor/ajax.py"
                 });
             }
 
@@ -50,7 +50,7 @@
                     params: {
                         command: "getchart"
                     },
-                    url: "/cgi-bin/gassensor/scripts/chart.py"
+                    url: "/cgi-bin/gassensor/chart.py"
                 });
             }
 
@@ -59,11 +59,11 @@
             }
 
             function setElements(xhr, xhrConfig) {
-                var data = JSON.parse(xhr.responseText);
-                var temperature = data.temperature;
-                var status = data.status;
-                var lastoff = data.on_time;
-                var updatetime = data.update_time;
+                //var data = JSON.parse(xhr.responseText);
+                var temperature = 72;
+                var status = "OFF";
+                var lastoff = "7:00 PM";
+                var updatetime = "January 2, 2016 at 5:30 PM";
                 loadPageStyle(temperature, status, lastoff);
                 displayUpdateTime(updatetime);
             }
@@ -75,7 +75,7 @@
             }
 
             function displayUpdateTime(time) {
-                document.getElementById("last-update").innerHTML = "Last updated at " + time;
+                document.getElementById("last-update").innerHTML = "Last updated on " + time;
             }
 
             function showTemperature(temp, status) {
@@ -92,16 +92,16 @@
             }
 
             function changeStatus(stat, lastoff) {
-                var response;
+                /*var response;
                 if (stat == "ON") {
                     response = "Your stove has been on since " + lastoff + ".";
                 }
                 else if (stat == "MAYBE") {
                     response = "Your stove could be either warming up, cooling, or on low heat."
                 }
-                else {
+                else {*/
                     response = "Your stove is off."
-                }
+                //}
                 document.getElementById("stat").innerHTML = response;
             }
 
@@ -124,11 +124,12 @@
             function showData() {
                 document.getElementById("table").display = "block";
                 document.getElementById("chart").display = "block";
-                document.getElementById("wait").hidden = "none";
+                //document.getElementById("wait").hidden = "none";
             }
 
             function run() {
-                getElements();
+                //getElements();
+                setElements();
                 checkWidth();
                 showChart();
             }
@@ -136,11 +137,11 @@
 	</head>
 
 	<body onload="run()" onresize="checkWidth()">
-        <img src="Images/background.png" class="background">
+        <img src="background.png" class="background">
         <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
         <table id="table" class="center" width="80%" display="none">
             <tr>
-                <td id="temperature" width="50%" class="text-center temp">--</td>
+                <td id="temperature" width="50%" class="text-center temp"></td>
                 <td id="stat" width="50%" class="text-center status">--</td>
             </tr>
         </table>
@@ -150,7 +151,7 @@
         <p class="update-time" id="last-update">--</p>
 
         <div id="wait" class="loading">
-            <img src="Images/squares.gif" class="wait-gif" id="wait">
+            <img src="squares.gif" class="wait-gif" id="wait">
             <h5 class="text-center">The data is loading...</h5>
         </div>
 
