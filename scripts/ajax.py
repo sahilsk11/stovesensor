@@ -6,6 +6,10 @@ import cgi
 import json
 import datetime
 import current
+import shelve
+
+shelf = shelve.open("uid.shelve")
+code = shelf["uid"]
 
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
@@ -20,7 +24,7 @@ if (command == "pageload"):
         on_time = "none"
     time = current.get_value("temperatures", "time", 1)
     time = time.strftime("%I:%M %p on %m/%d/%y")
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time}
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code}
     j = json.dumps(d)
     print j
     

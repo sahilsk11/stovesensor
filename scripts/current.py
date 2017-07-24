@@ -9,7 +9,7 @@ from datetime import date
 
 numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
-db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "table-data")
+db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
 recent_on = 0
  
@@ -43,7 +43,7 @@ def upload_value(temperature):
     
 def get_value(table, column, values):
     values = str(values)
-    get_information = "SELECT " + column + " from table-data." + table + " order by time desc limit " + values
+    get_information = "SELECT " + column + " from stovedata." + table + " order by time desc limit " + values
     cursor.execute(get_information)
     previous = cursor.fetchone()
     if (previous == None):

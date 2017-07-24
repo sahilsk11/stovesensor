@@ -7,7 +7,7 @@ import os
 import passwords
 
 def create_chart(data, div_id="chart"):
-    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width=728, height=319)
+    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="50%", height="70%")
     chart.color_array = []
     
     label_step = len(data)/10
@@ -21,9 +21,16 @@ def create_chart(data, div_id="chart"):
 
 def get_temperatures():
     data = {}
-    db = MySQLdb.connect("localhost", "gassensor", passwords.sql(), "gas")
+    db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
     cursor = db.cursor()
     db_data = get_temperature_data(cursor, db)
+    alternate = 1
+    if (len(db_data) >= 330):
+        alternate = 30
+    elif (len(db_data) >= 110):
+        alternate = 10
+    elif (len(db_data) >= 55):
+        alternate = 5
     for row in db_data:
         temperature = row[0]
         time = row[1]
@@ -33,7 +40,7 @@ def get_temperatures():
         
     
 def get_temperature_data(cursor, db):
-    run = "SELECT temperature, time from gas.temperatures order by time desc limit 1500"
+    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit 1500"
     cursor.execute(run)
     result = cursor.fetchall()
     return result
