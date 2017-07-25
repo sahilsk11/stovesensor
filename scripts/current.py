@@ -5,6 +5,7 @@ import datetime
 import passwords
 import notification
 from datetime import date
+import shelve
 import requests
 
 shelf = shelve.open("uid.shelve")
@@ -122,7 +123,7 @@ def upload_data():
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code}
     data = str(d)
     headers = {"code":code, "data":data, "command":"upload"}
-    response = requests.get("http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/scripts/data_storage.py", headers)
+    response = requests.post("http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/scripts/data_storage.py", data=headers)
 
 if (__name__ == "__main__"):
     temperature_f = read_temp()[1]
@@ -134,3 +135,4 @@ if (__name__ == "__main__"):
     upload_data()
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notifications(numbers)
+shelf.close()
