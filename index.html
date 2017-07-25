@@ -70,13 +70,16 @@
             }
 
             function uploadData(data) {
-                data = data.toString();
+                code = data["code"];
+                data = JSON.stringify(data);
                 XHRequest.createRequest({
                     success: confirmRequest,
                     params: {
+                        command: "upload",
+                        code: code,
                         data: data
                     },
-                    url: "http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/upload.html"
+                    url: "http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/scripts/data_storage.py"
                 });
             }
 
