@@ -4,8 +4,11 @@ import MySQLdb
 import datetime
 import passwords
 import notification
-import pprint
 from datetime import date
+import requests
+
+shelf = shelve.open("uid.shelve")
+code = shelf["uid"]
 
 numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
@@ -106,6 +109,21 @@ def can_send_notification():
         return True
     return False
 
+def upload_data():
+    temperature = get_value("temperatures", "temperature", 1)
+    status = get_value("calculated", "status", 1)
+    if (status == "ON"):
+        on_time = get_value("calculated", "time", 1)
+        on_time = on_time.strftime("%I:%M %p")
+    else:
+        on_time = "none"
+    time = get_value("temperatures", "time", 1)
+    time = time.strftime("%I:%M %p on %m/%d/%y")
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code}
+    data = str(d)
+    headers = {"code":code, "data":data, "command":"upload"}
+    response = requests.get("http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/scripts/data_storage.py", headers)
+
 if (__name__ == "__main__"):
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
@@ -113,5 +131,6 @@ if (__name__ == "__main__"):
     type = gas_on(temperature_f)[0]
     upload_estimate(type, temperature_f)
     print type
+    upload_data()
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notifications(numbers)
