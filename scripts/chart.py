@@ -7,7 +7,7 @@ import os
 import passwords
 
 def create_chart(data, div_id="chart"):
-    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="50%", height="70%")
+    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
     chart.color_array = []
     
     label_step = len(data)/10

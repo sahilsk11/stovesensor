@@ -13,7 +13,7 @@ code = shelf["uid"]
 
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
-command = "pageload"
+
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
     status = current.get_value("calculated", "status", 1)
@@ -33,3 +33,5 @@ if (command == "getchart"):
     d = {"html":html_text}
     json.dumps(d)
     print j
+    
+shelf.close()

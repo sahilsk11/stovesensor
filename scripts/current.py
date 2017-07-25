@@ -106,7 +106,7 @@ def can_send_notification():
         return True
     return False
 
-def run():
+if (__name__ == "__main__"):
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
@@ -115,4 +115,3 @@ def run():
     print type
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notifications(numbers)
-    time.sleep(60)
