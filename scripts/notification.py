@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import smtplib
 import passwords
-import current
+#import current
 
 class notification:
 
@@ -38,7 +38,7 @@ class notification:
         session.login(GMAIL_USERNAME, GMAIL_PASSWORD)
         
         session.sendmail(GMAIL_USERNAME, recipient, headers + "\r\n\r\n" + emailText)
-        current.upload_notification("gas_on")
+        #current.upload_notification("gas_on")
         session.quit()
 if (__name__ == "__main__"):
     notif = notification("4088870718", "tmomail.net")

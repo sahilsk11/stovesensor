@@ -60,31 +60,12 @@
 
             function setElements(xhr, xhrConfig) {
                 var data = JSON.parse(xhr.responseText);
-                uploadData(data);
                 var temperature = data.temperature;
                 var status = data.status;
                 var lastoff = data.on_time;
                 var updatetime = data.update_time;
                 loadPageStyle(temperature, status, lastoff);
                 displayUpdateTime(updatetime);
-            }
-
-            function uploadData(data) {
-                code = data["code"];
-                data = JSON.stringify(data);
-                XHRequest.createRequest({
-                    success: confirmRequest,
-                    params: {
-                        command: "upload",
-                        code: code,
-                        data: data
-                    },
-                    url: "http://192.168.2.225/Portfolio/Gas%20Sensor/gassensor/aws_processing/scripts/data_storage.py"
-                });
-            }
-
-            function confirmRequest(xhr, xhrConfig) {
-                console.log("Data uploaded to server.");
             }
 
             function loadPageStyle(temperature, status, lastoff) {
