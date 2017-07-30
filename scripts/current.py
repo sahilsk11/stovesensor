@@ -3,13 +3,15 @@ import time
 import MySQLdb
 import datetime
 import passwords
-#import notification
+import notification
 from datetime import date
 import shelve
 import requests
 
-shelf = shelve.open("uid.shelve")
-code = shelf["uid"]
+stove_info = shelve.open("uid.shelve")
+if (not "uid" in stove_info):
+    stove_info["uid"] = 2468
+code = stove_info["uid"]
 
 numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
@@ -47,12 +49,15 @@ def upload_value(temperature):
     
 def get_value(table, column, values):
     values = str(values)
-    get_information = "SELECT " + column + " from stovedata." + table + " order by time desc limit " + values
+    get_information = "SELECT " + column + " from stovedata." + table + " order by time desc limit " + str(values)
     cursor.execute(get_information)
-    previous = cursor.fetchone()
+    values = int(values)
+    previous = cursor.fetchmany(values)
     if (previous == None):
         return None
-    return previous[0]
+    if (len(previous) > 1):
+        return(previous[0][0], previous[1][0])
+    return previous[0][0]
     
 def upload_estimate(type, temperature):
     previous = get_value("calculated", "status", 1)
@@ -69,32 +74,34 @@ def upload_notification(type):
     db.commit()
 
 def gas_on(temperature):
-    last_value = get_value("temperatures", "temperature", 1) #return the last calculated value
+    last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
     #Check for last temperature change
     if (last_value != None):
         #Temperature went down by 3 degrees
-        if (temperature - last_value >= 3):
+        if (last_value - temperature >= 3):
+            print("temperature went down by 3")
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
-        if (last_value - temperature >= 5):
+        if (temperature - last_value >= 5):
+            print("temperature went up by 5")
             return ("ON", last_on)
     #Temperature above 100
     if (temperature > 100):
         return ("ON", last_on)
-    #Temperature between 100 and 80, but will happen if previous conditions are false
-    if (temperature <= 100 and temperature >= 80):
+    #Temperature between 100 and 90, but will happen if previous conditions are false
+    if (temperature <= 100 and temperature >= 90):
         return ("MAYBE", "none")
     #Temperature below 80
     if (temperature < 80):
             return ("OFF", "none")
 
-def gas_left_on(temperature, status):
+def gas_left_on(temperature, status, time=20):
     if (status == "ON"):
         last_value = get_value("calculated", "status", 1)
         if (last_value == "ON"):
             on_time = get_value("calculated", "time", 1)
-            if (datetime.datetime.now() - datetime.timedelta(minutes=20) > on_time):
+            if (datetime.datetime.now() - datetime.timedelta(minutes=time) > on_time):
                 return (True, on_time)
     return (False, None)
 
@@ -102,13 +109,15 @@ def send_notifications(users):
     for user in users:
         n = notification.notification(str(user["number"]), user["provider"])
         n.send_email()
+        n.close_shelf()
 
 def can_send_notification():
-    last_time = get_value("Notifications", "time", 1)
-    last_type = get_value("Notifications", "type", 1)
-    if (last_time == None or (last_time + datetime.timedelta(minutes=20) < datetime.datetime.now())):
-        return True
-    return False
+    #last_time = get_value("Notifications", "time", 1)
+    #last_type = get_value("Notifications", "type", 1)
+    #if (last_time == None or (last_time + datetime.timedelta(minutes=20) < datetime.datetime.now())):
+    #    return True
+    #return False
+    return True
 
 def upload_data():
     temperature = get_value("temperatures", "temperature", 1)
@@ -133,6 +142,6 @@ if (__name__ == "__main__"):
     upload_estimate(type, temperature_f)
     print type
     upload_data()
-    if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
+    if (gas_left_on(temperature_f, type, 3)[0] and can_send_notification()):
         send_notifications(numbers)
-shelf.close()
+stove_info.close()

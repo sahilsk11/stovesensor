@@ -26,12 +26,13 @@ def get_temperatures():
     db_data = get_temperature_data(cursor, db)
     alternate = 1
     if (len(db_data) >= 330):
-        alternate = 30
-    elif (len(db_data) >= 110):
         alternate = 10
-    elif (len(db_data) >= 55):
+    elif (len(db_data) >= 110):
         alternate = 5
-    for row in db_data:
+    elif (len(db_data) >= 55):
+        alternate = 2
+    for i in range(0, db_data):
+        row = db_data[i]
         temperature = row[0]
         time = row[1]
         time = time.strftime("%I:%M %p, %m/%d/%y")

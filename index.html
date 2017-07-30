@@ -64,7 +64,9 @@
                 var status = data.status;
                 var lastoff = data.on_time;
                 var updatetime = data.update_time;
+                var code = data.code;
                 loadPageStyle(temperature, status, lastoff);
+                displayDeviceCode(code);
                 displayUpdateTime(updatetime);
             }
 
@@ -76,6 +78,10 @@
 
             function displayUpdateTime(time) {
                 document.getElementById("last-update").innerHTML = "Last updated at " + time;
+            }
+
+            function displayDeviceCode(code) {
+                document.getElementById("code").innerHTML = "Your device code for connecting online: " + code;
             }
 
             function showTemperature(temp, status) {
@@ -148,6 +154,7 @@
         <hr class="hr">
 
         <p class="update-time" id="last-update">--</p>
+        <p class="update-time" id="code">--</p>
 
         <div id="wait" class="loading">
             <img src="Images/squares.gif" class="wait-gif" id="wait">

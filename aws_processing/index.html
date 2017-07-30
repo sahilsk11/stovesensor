@@ -18,6 +18,10 @@
             function getCode() {
                 var url = new URL(window.location.href);
                 var code = url.searchParams.get("code");
+                if (code == null) {
+                    code = prompt("Please enter your device code.");
+                    //window.location=url+"?code="+code;
+                }
                 return code;
             }
 
@@ -39,8 +43,10 @@
                 var status = data.status;
                 var lastoff = data.on_time;
                 var updatetime = data.update_time;
+                var code = data.code;
                 loadPageStyle(temperature, status, lastoff);
                 displayUpdateTime(updatetime);
+                displayCode(code);
             }
 
             function loadPageStyle(temperature, status, lastoff) {
@@ -51,6 +57,10 @@
 
             function displayUpdateTime(time) {
                 document.getElementById("last-update").innerHTML = "Last updated at " + time;
+            }
+
+            function displayCode(code) {
+                document.getElementById("code").innerHTML = "Your device code is " + code;
             }
 
             function showTemperature(temp, status) {
@@ -116,6 +126,7 @@
             <p id="temperature" width="50%" class="text-center temp"></p>
             <p id="stat" width="50%" class="text-center status"></p>
             <p class="update-time" id="last-update"></p>
+            <p class="update-time" id="code"></p>
         </div>
 
         <div id="wait" class="loading">
