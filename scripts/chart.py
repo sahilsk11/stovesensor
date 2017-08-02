@@ -53,7 +53,7 @@ def get_temperatures(values):
         
     
 def get_temperature_data(cursor, db, values):
-    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit 650"
+    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit " + values
     cursor.execute(run)
     result = cursor.fetchall()
     return result
@@ -62,6 +62,7 @@ print "Content-type: text/html\n\n"
 
 form = cgi.FieldStorage()
 width = form.getfirst("width", "")
-values = getSize(width)
+int_width = int(width)
+values = getSize(int_width)
 data = get_temperatures(values)
 print create_chart(data)

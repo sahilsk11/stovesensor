@@ -7,9 +7,13 @@ import json
 import datetime
 import current
 import shelve
+import requests
 
 shelf = shelve.open("uid.shelve")
 code = shelf["uid"]
+
+def set_code(uid, f):
+    f["uid"] = uid
 
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
@@ -33,5 +37,16 @@ if (command == "getchart"):
     d = {"html":html_text}
     json.dumps(d)
     print j
+
+if (command == "initial_setup"):
+    print "setting up"
+    headers = {"command":"newdevice"}
+    response = requests.get("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
+    numbers = []
+    uid = response["code"]
+    set_code(uid, shelf)
+    wifi_name = ""
+    wifi_password = ""
+    print "success"
     
 shelf.close()
