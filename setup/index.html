@@ -1,0 +1,82 @@
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link href="../CSS/bootstrap.css" rel="stylesheet">
+        <link href="../CSS/organize.css" rel="stylesheet">
+
+        <link href="../CSS/font.css" rel="stylesheet">
+
+        <title>Stove Sensor</title>
+
+        <link rel="icon" href="../Images/icon.png">
+
+        <script src="../js/XHRequest.js"></script>
+        <script>
+
+        function submitInfo() {
+            var wifi = document.getElementById("wifi").value;
+            var password = document.getElementById("password").value;
+            var numbers = document.getElementById("numbers").value;
+            numbers_arr = parseNumbers(numbers);
+            uploadData(wifi, password, numbers_arr);
+        }
+
+        function parseNumbers(phone_numbers) {
+            console.log(phone_numbers);
+            var arr = phone_numbers.split('~');
+            for (var i = 0; i < arr.length; i++) {
+                arr[i] = arr[i].replace(" ", "");
+            }
+        }
+
+        function uploadData(wifi, password, phone_numbers) {
+            numbers = JSON.stringify(phone_numbers);
+            XHRequest.createRequest({
+                success: confirmUpload,
+                params: {
+                    command: "initial_setup",
+                    wifi: wifi,
+                    password: password,
+                    phone: numbers
+                },
+                url: "../scripts/ajax.py"
+            });
+        }
+
+        function confirmUpload() {
+
+        }
+            
+        </script>
+	</head>
+
+	<body>
+        <img src="../Images/background.png" class="background">
+        <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
+        
+        <h1 class="title text-center">Welcome to StoveSensor.</h1>
+        <h3 class="special-font text-center">Please enter the following information to get started.</h3>
+
+        <form class="container-fluid">
+            <div class="form-group">
+                <label>WiFi Name (please enter EXACTLY as is)</label>
+                <input class="form-control" placeholder="Wifi" id="wifi">
+            </div>
+            <div class="form-group">
+                <label>WiFi Password</label>
+                <input class="form-control" placeholder="Password" id="password">
+            </div>
+            <br>
+            <p>If your stove is ever left on, stovesensor will text you with alerts. For this feature, please enter the phone numbers you would like this alert to be sent to in the format (XXX)XXX-XXXX. Seperate each phone number with a comma. <br>Note: messaging fees may apply.</p>
+            <div class="form-group">
+                <label>Phone Numbers</label>
+                <input class="form-control" placeholder="Phone" id="numbers">
+            </div>
+        </form>
+
+        <button class="btn btn-primary" onclick="submitInfo()">Submit</button>
+
+	</body>
+</html>
