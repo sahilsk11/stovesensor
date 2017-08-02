@@ -9,9 +9,6 @@ import shelve
 import requests
 
 stove_info = shelve.open("uid.shelve")
-if (not "uid" in stove_info):
-    stove_info["uid"] = 2468
-code = stove_info["uid"]
 
 numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
 
@@ -67,12 +64,6 @@ def upload_estimate(type, temperature):
         cursor.execute(script)
         db.commit()
 
-def upload_notification(type):
-    time = datetime.datetime.now()
-    script = "insert into Notifications (type, time) values ('%s', '%s')" % (type, time)
-    cursor.execute(script)
-    db.commit()
-
 def gas_on(temperature):
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
@@ -105,21 +96,17 @@ def gas_left_on(temperature, status, time=20):
                 return (True, on_time)
     return (False, None)
 
-def send_notifications(users):
-    for user in users:
-        n = notification.notification(str(user["number"]), user["provider"])
-        n.send_email()
-        n.close_shelf()
-
 def can_send_notification():
-    #last_time = get_value("Notifications", "time", 1)
-    #last_type = get_value("Notifications", "type", 1)
-    #if (last_time == None or (last_time + datetime.timedelta(minutes=20) < datetime.datetime.now())):
-    #    return True
-    #return False
-    return True
+    notification_data = shelve.open("notification.shelve", writeback=True)
+    if (not "last_sent" in notification_data):
+        notification_data["last_sent"] = 0
+    last_time = notification_data["last_sent"]
+    if (last_time == 0 or last_time + datetime.timedelta(minutes=5) < datetime.datetime.now()):
+        return True
+    else:
+        return False
 
-def upload_data():
+def upload_data(temperature_f, type):
     temperature = get_value("temperatures", "temperature", 1)
     status = get_value("calculated", "status", 1)
     if (status == "ON"):
@@ -129,7 +116,13 @@ def upload_data():
         on_time = "none"
     time = get_value("temperatures", "time", 1)
     time = time.strftime("%I:%M %p on %m/%d/%y")
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code}
+    send_notification = False
+    if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
+        send_notification = True
+    if (not "uid" in stove_info):
+        stove_info["uid"] = 2468
+    code = stove_info["uid"]
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":numbers}
     data = str(d)
     headers = {"code":code, "data":data, "command":"upload"}
     response = requests.post("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
@@ -141,7 +134,5 @@ if (__name__ == "__main__"):
     type = gas_on(temperature_f)[0]
     upload_estimate(type, temperature_f)
     print type
-    upload_data()
-    if (gas_left_on(temperature_f, type, 3)[0] and can_send_notification()):
-        send_notifications(numbers)
+    upload_data(temperature_f, type)
 stove_info.close()

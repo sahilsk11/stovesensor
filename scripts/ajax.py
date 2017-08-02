@@ -13,6 +13,7 @@ shelf = shelve.open("uid.shelve")
 code = shelf["uid"]
 
 def set_code(uid, f):
+    print(uid)
     f["uid"] = uid
 
 form = cgi.FieldStorage()
@@ -43,7 +44,7 @@ if (command == "initial_setup"):
     headers = {"command":"newdevice"}
     response = requests.get("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
     numbers = []
-    uid = response["code"]
+    uid = shelf["uid"]
     set_code(uid, shelf)
     wifi_name = ""
     wifi_password = ""
