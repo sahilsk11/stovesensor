@@ -20,6 +20,7 @@ def set_code(uid, f):
 
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
+code = form.getfirst("code", "")
 
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
@@ -54,9 +55,12 @@ if (command == "initial_setup"):
     print "success"
     
 if (command == "code_set"):
-    code_set = (code != None)
-    d = {"code_set":code_set}
+    code_set = (code != None and code != 2468)
+    d = {"code_set":code_set, "code":code}
     j = json.dumps(d)
     print j
+    
+if (command == "set_code"):
+    shelf["uid"] = int(code)
     
 shelf.close()

@@ -35,7 +35,7 @@
             var password = document.getElementById("password").value;
             var numbers = document.getElementById("numbers").value;
             numbers_arr = parseNumbers(numbers);
-            uploadData(wifi, password, numbers_arr);
+            alert(code_set);
             if (!code_set) {
                 generateCode();
             }
@@ -74,7 +74,18 @@
         }
 
         function saveCode(xhr, xhrConfig) {
-            console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            console.log(response);
+            var completed = response.success;
+            var code = response.new_code;
+            XHRequest.createRequest({
+                success: confirmUpload,
+                params: {
+                    command: "set_code",
+                    code: code
+                },
+                url: "../scripts/ajax.py"
+            });
         }
 
         function confirmUpload() {
@@ -108,7 +119,7 @@
             </div>
         </form>
 
-        <button class="btn btn-primary" onclick="submitInfo()">Submit</button>
+        <button class="btn btn-primary" onclick="checkIfCodeSet()">Submit</button>
 
 	</body>
 </html>
