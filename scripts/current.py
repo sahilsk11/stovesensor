@@ -120,6 +120,7 @@ def upload_data(temperature_f, type):
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notification = True
     if (not "uid" in stove_info):
+        print("setting code")
         stove_info["uid"] = 2468
     code = stove_info["uid"]
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":numbers}

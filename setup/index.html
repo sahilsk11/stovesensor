@@ -26,7 +26,7 @@
         }
 
         function setCodeStatus(xhr, xhrConfig) {
-            var response = xhr.responseText;
+            var response = JSON.parse(xhr.responseText);
             submitInfo(response.code_set);
         }
 

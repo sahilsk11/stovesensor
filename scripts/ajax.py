@@ -11,16 +11,13 @@ import requests
 
 shelf = shelve.open("uid.shelve")
 if (not "uid" in shelf):
+    print("Shelf not found")
     shelf["uid"] = None
 code = shelf["uid"]
 
-def set_code(uid, f):
-    print(uid)
-    f["uid"] = uid
-
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
-code = form.getfirst("code", "")
+new_code = form.getfirst("code", "")
 
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
@@ -41,26 +38,15 @@ if (command == "getchart"):
     d = {"html":html_text}
     json.dumps(d)
     print j
-
-if (command == "initial_setup"):
-    print "setting up"
-    headers = {"command":"newdevice"}
-    response = requests.get("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
-    print(response.text())
-    numbers = []
-    uid = response["uid"]
-    set_code(uid, shelf)
-    wifi_name = ""
-    wifi_password = ""
-    print "success"
     
 if (command == "code_set"):
-    code_set = (code != None and code != 2468)
+    code_set = (code != None and code != 2468 and code != "")
     d = {"code_set":code_set, "code":code}
     j = json.dumps(d)
     print j
     
 if (command == "set_code"):
-    shelf["uid"] = int(code)
+    if (len(new_code) == 4):
+        shelf["uid"] = int(new_code)
     
 shelf.close()

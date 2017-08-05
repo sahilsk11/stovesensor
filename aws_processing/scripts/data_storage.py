@@ -6,6 +6,7 @@ import shelve
 import json
 import cgi
 import notification
+import random
 
 def send_notifications(code, users):
     for user in users:
@@ -40,10 +41,10 @@ if (command == "newdevice"):
         for i in range(0, 4):
             number = random.randint(1, 9)
             uid = uid * 10 + number
-        if (uid not in stovedata["devices"]):
-            stovedata["devices"][uid] = {}
+        if (uid not in stovesensor_data["devices"]):
+            stovesensor_data["devices"][uid] = {}
             completed = True
-    d = {"success": True, "code":uid}
+    d = {"success": True, "new_code":uid}
     j = json.dumps(d)
     print j
     
