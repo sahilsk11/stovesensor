@@ -15,12 +15,30 @@
         <script src="../js/XHRequest.js"></script>
         <script>
 
-        function submitInfo() {
+        function checkIfCodeSet() {
+            XHRequest.createRequest({
+                success: setCodeStatus,
+                params: {
+                    command: "code_set",
+                },
+                url: "../scripts/ajax.py"
+            });
+        }
+
+        function setCodeStatus(xhr, xhrConfig) {
+            var response = xhr.responseText;
+            submitInfo(response.code_set);
+        }
+
+        function submitInfo(code_set) {
             var wifi = document.getElementById("wifi").value;
             var password = document.getElementById("password").value;
             var numbers = document.getElementById("numbers").value;
             numbers_arr = parseNumbers(numbers);
             uploadData(wifi, password, numbers_arr);
+            if (!code_set) {
+                generateCode();
+            }
         }
 
         function parseNumbers(phone_numbers) {
@@ -43,6 +61,20 @@
                 },
                 url: "../scripts/ajax.py"
             });
+        }
+
+        function generateCode() {
+            XHRequest.createRequest({
+                success: saveCode,
+                params: {
+                    command: "newdevice",
+                },
+                url: "https://www.iotspace.tech/stovesensor/scripts/data_storage.py"
+            });
+        }
+
+        function saveCode(xhr, xhrConfig) {
+            console.log(xhr.responseText);
         }
 
         function confirmUpload() {

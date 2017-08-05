@@ -10,6 +10,8 @@ import shelve
 import requests
 
 shelf = shelve.open("uid.shelve")
+if (not "uid" in shelf):
+    shelf["uid"] = None
 code = shelf["uid"]
 
 def set_code(uid, f):
@@ -43,11 +45,18 @@ if (command == "initial_setup"):
     print "setting up"
     headers = {"command":"newdevice"}
     response = requests.get("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
+    print(response.text())
     numbers = []
-    uid = shelf["uid"]
+    uid = response["uid"]
     set_code(uid, shelf)
     wifi_name = ""
     wifi_password = ""
     print "success"
+    
+if (command == "code_set"):
+    code_set = (code != None)
+    d = {"code_set":code_set}
+    j = json.dumps(d)
+    print j
     
 shelf.close()
