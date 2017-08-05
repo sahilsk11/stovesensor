@@ -21,22 +21,22 @@
             }
 
             function getElements() {
-                var width = getWidth();
                 XHRequest.createRequest({
                     success: setElements,
                     params: {
-                        command: "pageload",
-                        width: width
+                        command: "pageload"
                     },
                     url: "scripts/ajax.py"
                 });
             }
 
             function showChart() {
+                var width = getWidth();
                 XHRequest.createRequest({
                     success: printChart,
                     params: {
-                        command: "getchart"
+                        command: "getchart",
+                        width: width
                     },
                     url: "scripts/chart.py"
                 });

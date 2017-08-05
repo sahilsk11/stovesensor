@@ -41,7 +41,10 @@ if (command == "newdevice"):
         for i in range(0, 4):
             number = random.randint(1, 9)
             uid = uid * 10 + number
-        if (uid not in stovesensor_data["devices"]):
+            str_number = str(uid)
+        str_number = str(uid)
+        counter = str_number.count("6")
+        if (uid not in stovesensor_data["devices"] and counter < 3):
             stovesensor_data["devices"][uid] = {}
             completed = True
     d = {"success": True, "new_code":uid}
