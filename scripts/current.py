@@ -113,7 +113,7 @@ def upload_data(temperature_f, type):
     else:
         on_time = "none"
     time = get_value("temperatures", "time", 1)
-    time = time.strftime("%H:%M %p on %m/%d/%y")
+    time = time.strftime("%I:%M %p on %m/%d/%y")
     send_notification = False
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notification = True

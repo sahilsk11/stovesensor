@@ -18,6 +18,7 @@ code = shelf["uid"]
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
 new_code = form.getfirst("code", "")
+numbers = form.getfirst("phone", "")
 
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
@@ -39,14 +40,17 @@ if (command == "getchart"):
     json.dumps(d)
     print j
     
-if (command == "code_set"):
+if (command == "load_setup"):
     code_set = (code != None and code != 2468 and code != "")
-    d = {"code_set":code_set, "code":code}
+    d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code}
     j = json.dumps(d)
     print j
     
 if (command == "set_code"):
     if (len(new_code) == 4):
         shelf["uid"] = int(new_code)
+        
+if (command == "initial_setup"):
+    shelf["user_info"] = numbers
     
 shelf.close()

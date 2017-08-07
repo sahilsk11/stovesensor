@@ -15,11 +15,14 @@
         <script src="../js/XHRequest.js"></script>
         <script>
 
+        var codeSet = false;
+
         function checkIfCodeSet() {
+            submitInfo();
             XHRequest.createRequest({
                 success: setCodeStatus,
                 params: {
-                    command: "code_set",
+                    command: "load_setup",
                 },
                 url: "../scripts/ajax.py"
             });
@@ -27,7 +30,8 @@
 
         function setCodeStatus(xhr, xhrConfig) {
             var response = JSON.parse(xhr.responseText);
-            submitInfo(response.code_set);
+            codeSet = response.code_set
+            document.getElementById("numbers").value = response.numbers;
         }
 
         function submitInfo(code_set) {
@@ -38,13 +42,26 @@
             if (!code_set) {
                 generateCode();
             }
+            if (numbers_arr != null) {
+                uploadData(wifi, password, numbers_arr);
+            }
         }
 
         function parseNumbers(phone_numbers) {
             console.log(phone_numbers);
-            var arr = phone_numbers.split('~');
+            var arr = phone_numbers.split(',');
+            var completed = true;
             for (var i = 0; i < arr.length; i++) {
                 arr[i] = arr[i].replace(" ", "");
+                if (arr[i].length != 12 || arr[i].indexOf("+") < 0) {
+                    alert("There was an error with one of the phone numbers. Please make sure they are valid and follow the +1XXXXXXXXXX format.");
+                }
+            }
+            if (completed) {
+                return arr;
+            }
+            else {
+                return null;
             }
             console.log(arr);
         }
