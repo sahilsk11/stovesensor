@@ -27,7 +27,7 @@ if (command == "upload"):
     stovesensor_data["devices"][int_code] = json_data
     if (json_data["notification"]):
         for number in json_data["numbers"]:
-            notification.send_notifications(number, code)
+            notification.send_notification(number, code)
     print {"success":True}
     
 if (command == "pageload"):

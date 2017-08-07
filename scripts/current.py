@@ -3,8 +3,6 @@ import time
 import MySQLdb
 import datetime
 import passwords
-import notification
-from datetime import date
 import shelve
 import requests
 
@@ -101,6 +99,7 @@ def can_send_notification():
         stove_info["last_sent"] = 0
     last_time = stove_info["last_sent"]
     if (last_time == 0 or last_time + datetime.timedelta(minutes=5) < datetime.datetime.now()):
+        stove_info["last_sent"] = datetime.datetime.now()
         return True
     else:
         return False
@@ -114,7 +113,7 @@ def upload_data(temperature_f, type):
     else:
         on_time = "none"
     time = get_value("temperatures", "time", 1)
-    time = time.strftime("%I:%M %p on %m/%d/%y")
+    time = time.strftime("%H:%M %p on %m/%d/%y")
     send_notification = False
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notification = True
