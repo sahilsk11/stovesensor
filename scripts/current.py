@@ -8,9 +8,10 @@ from datetime import date
 import shelve
 import requests
 
-stove_info = shelve.open("uid.shelve")
-
-numbers = [{"number":passwords.number(), "provider":'tmomail.net'}]
+stove_info = shelve.open("uid.shelve", writeback=True)
+numbers = shelve.open("phone_numbers", writeback=True)
+if not ("user_info" in numbers):
+    numbers["user_info"] = []
 
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
@@ -123,7 +124,7 @@ def upload_data(temperature_f, type):
         print("setting code")
         stove_info["uid"] = 2468
     code = stove_info["uid"]
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":numbers}
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":numbers["user_info"]}
     data = str(d)
     headers = {"code":code, "data":data, "command":"upload"}
     response = requests.post("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
