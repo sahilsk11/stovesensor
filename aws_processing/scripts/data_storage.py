@@ -23,7 +23,8 @@ data = form.getfirst("data", "")
 
 if (command == "upload"):
     json_data = eval(data)
-    stovesensor_data["devices"][code] = json_data
+    int_code = int(code)
+    stovesensor_data["devices"][int_code] = json_data
     if (json_data["notification"]):
         for number in json_data["numbers"]:
             notification.send_notifications(number, code)

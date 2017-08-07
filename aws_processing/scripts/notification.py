@@ -5,8 +5,8 @@ def send_notification(number, code):
     # Create an SNS client
     client = boto3.client(
         "sns",
-        aws_access_key_id=passwords.key_id(),
-        aws_secret_access_key=passwords.access_key(),
+        aws_access_key_id=passwords.key(),
+        aws_secret_access_key=passwords.access(),
         region_name="us-east-1"
     )
      

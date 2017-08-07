@@ -9,7 +9,7 @@ import current
 import shelve
 import requests
 
-shelf = shelve.open("uid.shelve")
+shelf = shelve.open("stove_info.shelve")
 if (not "uid" in shelf):
     print("Shelf not found")
     shelf["uid"] = None

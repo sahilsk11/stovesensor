@@ -8,9 +8,8 @@ from datetime import date
 import shelve
 import requests
 
-stove_info = shelve.open("uid.shelve", writeback=True)
-numbers = shelve.open("phone_numbers", writeback=True)
-if not ("user_info" in numbers):
+stove_info = shelve.open("stove_data.shelve", writeback=True)
+if not ("user_info" in stove_info):
     numbers["user_info"] = []
 
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
@@ -98,10 +97,9 @@ def gas_left_on(temperature, status, time=20):
     return (False, None)
 
 def can_send_notification():
-    notification_data = shelve.open("notification.shelve", writeback=True)
-    if (not "last_sent" in notification_data):
-        notification_data["last_sent"] = 0
-    last_time = notification_data["last_sent"]
+    if (not "last_sent" in stove_info):
+        stove_info["last_sent"] = 0
+    last_time = stove_info["last_sent"]
     if (last_time == 0 or last_time + datetime.timedelta(minutes=5) < datetime.datetime.now()):
         return True
     else:
