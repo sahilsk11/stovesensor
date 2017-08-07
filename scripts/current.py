@@ -10,7 +10,7 @@ import requests
 
 stove_info = shelve.open("stove_data.shelve", writeback=True)
 if not ("user_info" in stove_info):
-    numbers["user_info"] = []
+    stove_info["user_info"] = []
 
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
@@ -122,7 +122,7 @@ def upload_data(temperature_f, type):
         print("setting code")
         stove_info["uid"] = 2468
     code = stove_info["uid"]
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":numbers["user_info"]}
+    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
     data = str(d)
     headers = {"code":code, "data":data, "command":"upload"}
     response = requests.post("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
