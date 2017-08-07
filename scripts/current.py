@@ -83,9 +83,9 @@ def gas_on(temperature):
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
         return ("MAYBE", "none")
-    #Temperature below 80
-    if (temperature < 80):
-            return ("OFF", "none")
+    #Temperature below 90
+    
+    return ("OFF", "none")
 
 def gas_left_on(temperature, status, time=20):
     if (status == "ON"):
