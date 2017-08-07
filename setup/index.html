@@ -46,6 +46,7 @@
             for (var i = 0; i < arr.length; i++) {
                 arr[i] = arr[i].replace(" ", "");
             }
+            console.log(arr);
         }
 
         function uploadData(wifi, password, phone_numbers) {
@@ -111,10 +112,10 @@
                 <input class="form-control" placeholder="Password" id="password">
             </div>
             <br>
-            <p>If your stove is ever left on, stovesensor will text you with alerts. For this feature, please enter the phone numbers you would like this alert to be sent to in the format (XXX)XXX-XXXX. Seperate each phone number with a comma. <br>Note: messaging fees may apply.</p>
+            <p>If your stove is ever left on, stovesensor will text you with alerts. For this feature, please enter the phone numbers you would like this alert to be sent to in the format +1XXXXXXXXXX with no parantheses or dashes. Seperate each phone number with a comma and include country code for each number. <br>Note: messaging fees may apply.</p>
             <div class="form-group">
                 <label>Phone Numbers</label>
-                <input class="form-control" placeholder="Phone" id="numbers">
+                <input class="form-control" placeholder="Phone" id="numbers" value="+1">
             </div>
         </form>
 
