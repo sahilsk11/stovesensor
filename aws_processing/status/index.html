@@ -1,0 +1,138 @@
+<html lang="en">
+	<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+		<link href="CSS/bootstrap.css" rel="stylesheet">
+        <link href="CSS/organize.css" rel="stylesheet">
+
+        <link href="CSS/font.css" rel="stylesheet">
+
+        <title>Stove Sensor</title>
+
+        <link rel="icon" href="Images/icon.png">
+
+        <script src="js/XHRequest.js"></script>
+        <script>
+
+            function getCode() {
+                var url = new URL(window.location.href);
+                var code = url.searchParams.get("code");
+                if (code == null) {
+                    code = prompt("Please enter your device code.");
+                    //window.location=url+"?code="+code;
+                }
+                return code;
+            }
+
+            function getElements() {
+                var code = getCode();
+                XHRequest.createRequest({
+                    success: setElements,
+                    params: {
+                        code: code,
+                        command: "pageload"
+                    },
+                    url: "scripts/data_storage.py"
+                });
+            }
+
+            function setElements(xhr, xhrConfig) {
+                var data = JSON.parse(xhr.responseText);
+                var temperature = data.temperature;
+                var status = data.status;
+                var lastoff = data.on_time;
+                var updatetime = data.update_time;
+                var code = data.code;
+                loadPageStyle(temperature, status, lastoff);
+                displayUpdateTime(updatetime);
+                displayCode(code);
+            }
+
+            function loadPageStyle(temperature, status, lastoff) {
+                changeStatus(status, lastoff);
+                showTemperature(temperature, status);
+                showData();
+            }
+
+            function displayUpdateTime(time) {
+                document.getElementById("last-update").innerHTML = "Last updated at " + time;
+            }
+
+            function displayCode(code) {
+                document.getElementById("code").innerHTML = "Your device code is " + code;
+            }
+
+            function showTemperature(temp, status) {
+                document.getElementById("temperature").innerHTML = Math.round(temp) + "&#176;F";
+                if (status == "OFF") {
+                    document.getElementById("temperature").style.color="#3B60F5";
+                }
+                else if (status == "MAYBE") {
+                    document.getElementById("temperature").style.color="#D9B62B";
+                }
+                else {
+                    document.getElementById("temperature").style.color="#D43737";
+                }
+            }
+
+            function changeStatus(stat, lastoff) {
+                var response;
+                if (stat == "ON") {
+                    response = "Your stove has been on since " + lastoff + ".";
+                }
+                else if (stat == "MAYBE") {
+                    response = "Your stove could be either warming up, cooling, or on low heat."
+                }
+                else {
+                    response = "Your stove is off."
+                }
+                document.getElementById("stat").innerHTML = response;
+            }
+
+            function checkWidth() {
+                var width = window.innerWidth;
+                if (width < 450) {
+                    document.getElementById("temperature").style.fontSize = "40px";
+                    document.getElementById("stat").style.fontSize = "20px";
+                }
+                else if (width > 900) {
+                    document.getElementById("temperature").style.fontSize = "95px";
+                    document.getElementById("stat").style.fontSize = "30px";
+                }
+                else {
+                    document.getElementById("temperature").style.fontSize = "10vw";
+                    document.getElementById("stat").style.fontSize = "3vw";
+                }
+            }
+
+            function showData() {
+                document.getElementById("wait").hidden = "none";
+            }
+
+            function run() {
+                getElements();
+                checkWidth();
+            }
+
+        </script>
+	</head>
+
+	<body onload="run()">
+        <img src="Images/background.png" class="background">
+        <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
+
+        <div id="elements" class="continer-fluid">
+            <p id="temperature" width="50%" class="text-center temp"></p>
+            <p id="stat" width="50%" class="text-center status"></p>
+            <p class="update-time" id="last-update"></p>
+            <p class="update-time" id="code"></p>
+        </div>
+
+        <div id="wait" class="loading">
+            <img src="Images/squares.gif" class="wait-gif center" id="wait">
+            <h5 class="text-center">The data is loading...</h5>
+        </div>
+
+	</body>
+</html>
