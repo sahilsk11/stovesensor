@@ -13,13 +13,11 @@ def getSize(width):
         return "120"
     return "150"
 
-def create_chart(data, div_id="chart"):
+def create_chart(data, values, div_id="chart"):
     chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
     chart.color_array = []
     
-    label_step = len(data)/10
-    if (label_step < 1):
-        label_step = 1
+    label_step = values
     chart.setChartTagAttributes({"caption":"Stove Temperature", "labelStep":label_step})
     chart.addDataSeries("Temperature", data, 
                         series_attributes = {"renderAs":"column", "showValues":"0", "alpha":70})
@@ -55,4 +53,4 @@ width = form.getfirst("width", "")
 int_width = int(width)
 values = getSize(int_width)
 data = get_temperatures()
-print create_chart(data)
+print create_chart(data, values)
