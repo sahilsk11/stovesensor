@@ -16,7 +16,7 @@ def getSize(width):
     else:
         return "70"
 
-def create_chart(data, div_id="chart", values):
+def create_chart(data, div_id="chart"):
     chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
     chart.color_array = []
     
@@ -58,4 +58,4 @@ width = form.getfirst("width", "")
 int_width = int(width)
 values = getSize(int_width)
 data = get_temperatures()
-print create_chart(data, values)
+print create_chart(data)
