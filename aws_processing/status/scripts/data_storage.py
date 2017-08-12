@@ -16,7 +16,7 @@ def send_notifications(code, users):
     for user in users:
         notification.send_notification(str(user["number"]), code)
 
-stovesensor_data = shelve.open("stove_info.data", writeback= True)
+stovesensor_data = shelve.open("stove_info.shelve", writeback= True)
 if (not "devices" in stovesensor_data):
         stovesensor_data["devices"] = {}
 
@@ -28,6 +28,8 @@ data = form.getfirst("data", "")
 if (command == "upload"):
     json_data = eval(data)
     int_code = int(code)
+    if (not int_code in stovesensor_data["devices"]):
+        stovesensor_data["devices"] = {}
     stovesensor_data["devices"][int_code] = json_data
     if (json_data["notification"]):
         log.write("Sending notification to "+str(json_data["numbers"]))
