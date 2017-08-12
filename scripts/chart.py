@@ -7,14 +7,11 @@ import os
 import passwords
 
 def getSize(width):
-    if (width > 1500):
-        return "650"
-    elif (width > 1190):
-        return "1190"
-    elif (width > 970):
-        return "100"
-    else:
-        return "70"
+    if (width > 1000):
+        return "50"
+    elif (width > 930):
+        return "120"
+    return "150"
 
 def create_chart(data, div_id="chart"):
     chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
@@ -34,7 +31,7 @@ def get_temperatures():
     db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
     cursor = db.cursor()
     db_data = get_temperature_data(cursor, db)
-
+    i = 0
     while (i < len(db_data)):
         row = db_data[i]
         temperature = row[0]
