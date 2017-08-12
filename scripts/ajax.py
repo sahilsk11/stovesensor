@@ -9,7 +9,7 @@ import current
 import shelve
 import requests
 
-shelf = shelve.open("stove_info.shelve")
+shelf = shelve.open("stove_data.shelve", writeback=True)
 if (not "uid" in shelf):
     print("Shelf not found")
     shelf["uid"] = None
@@ -41,7 +41,7 @@ if (command == "getchart"):
     print j
     
 if (command == "load_setup"):
-    code_set = (code != None and code != 2468 and code != "")
+    code_set = (code != None and code != "")
     d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code}
     j = json.dumps(d)
     print j
@@ -51,6 +51,12 @@ if (command == "set_code"):
         shelf["uid"] = int(new_code)
         
 if (command == "initial_setup"):
-    shelf["user_info"] = numbers
+    phone_numbers = eval(numbers)
+    for i in range(0, len(phone_numbers)):
+        phone_numbers[i] = phone_numbers[i].replace("%2B", "+")
+    shelf["user_info"] = phone_numbers
+    d = {"success":True}
+    j = json.dumps(d)
+    print j
     
 shelf.close()

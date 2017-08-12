@@ -18,7 +18,6 @@
         var codeSet = false;
 
         function checkIfCodeSet() {
-            submitInfo();
             XHRequest.createRequest({
                 success: setCodeStatus,
                 params: {
@@ -29,21 +28,23 @@
         }
 
         function setCodeStatus(xhr, xhrConfig) {
+            console.log("setting up page");
             var response = JSON.parse(xhr.responseText);
             codeSet = response.code_set
-            document.getElementById("numbers").value = response.numbers;
+            if (response.numbers != null && response.numbers.length != 0) {
+                console.log("Updated numbers");
+                document.getElementById("numbers").value = response.numbers;
+            }
         }
 
-        function submitInfo(code_set) {
-            var wifi = document.getElementById("wifi").value;
-            var password = document.getElementById("password").value;
+        function submitInfo() {
             var numbers = document.getElementById("numbers").value;
             numbers_arr = parseNumbers(numbers);
-            if (!code_set) {
+            if (!codeSet) {
                 generateCode();
             }
             if (numbers_arr != null) {
-                uploadData(wifi, password, numbers_arr);
+                uploadData(numbers_arr);
             }
         }
 
@@ -55,7 +56,9 @@
                 arr[i] = arr[i].replace(" ", "");
                 if (arr[i].length != 12 || arr[i].indexOf("+") < 0) {
                     alert("There was an error with one of the phone numbers. Please make sure they are valid and follow the +1XXXXXXXXXX format.");
+                    completed = false;
                 }
+                arr[i] = arr[i].replace("+", encodeURIComponent("+"));
             }
             if (completed) {
                 return arr;
@@ -66,14 +69,12 @@
             console.log(arr);
         }
 
-        function uploadData(wifi, password, phone_numbers) {
+        function uploadData(phone_numbers) {
             numbers = JSON.stringify(phone_numbers);
             XHRequest.createRequest({
                 success: confirmUpload,
                 params: {
                     command: "initial_setup",
-                    wifi: wifi,
-                    password: password,
                     phone: numbers
                 },
                 url: "../scripts/ajax.py"
@@ -112,7 +113,7 @@
         </script>
 	</head>
 
-	<body>
+	<body onload="checkIfCodeSet()">
         <img src="../Images/background.png" class="background">
         <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
         
@@ -120,15 +121,6 @@
         <h3 class="special-font text-center">Please enter the following information to get started.</h3>
 
         <form class="container-fluid">
-            <div class="form-group">
-                <label>WiFi Name (please enter EXACTLY as is)</label>
-                <input class="form-control" placeholder="Wifi" id="wifi">
-            </div>
-            <div class="form-group">
-                <label>WiFi Password</label>
-                <input class="form-control" placeholder="Password" id="password">
-            </div>
-            <br>
             <p>If your stove is ever left on, stovesensor will text you with alerts. For this feature, please enter the phone numbers you would like this alert to be sent to in the format +1XXXXXXXXXX with no parantheses or dashes. Seperate each phone number with a comma and include country code for each number. <br>Note: messaging fees may apply.</p>
             <div class="form-group">
                 <label>Phone Numbers</label>
@@ -136,7 +128,7 @@
             </div>
         </form>
 
-        <button class="btn btn-primary" onclick="checkIfCodeSet()">Submit</button>
+        <button class="btn btn-primary" onclick="submitInfo()">Submit</button>
 
 	</body>
 </html>

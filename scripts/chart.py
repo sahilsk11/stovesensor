@@ -16,7 +16,7 @@ def getSize(width):
     else:
         return "70"
 
-def create_chart(data, div_id="chart"):
+def create_chart(data, div_id="chart", values):
     chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
     chart.color_array = []
     
@@ -29,31 +29,24 @@ def create_chart(data, div_id="chart"):
     html = chart.getHTML(div_id, js_only=1)
     return html
 
-def get_temperatures(values):
+def get_temperatures():
     data = {}
     db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
     cursor = db.cursor()
-    db_data = get_temperature_data(cursor, db, values)
-    alternate = 1
-    if (len(db_data) >= 330):
-        alternate = 3
-    elif (len(db_data) >= 110):
-        alternate = 2
-    elif (len(db_data) >= 55):
-        alternate = 1
-    i = 0
+    db_data = get_temperature_data(cursor, db)
+
     while (i < len(db_data)):
         row = db_data[i]
         temperature = row[0]
         time = row[1]
-        time = time.strftime("%I:%M %p, %m/%d/%y")
+        time = time.strftime("%H:%M %p, %m/%d/%y")
         data[time] = temperature
-        i = i + alternate
+        i += 1
     return data
         
     
-def get_temperature_data(cursor, db, values):
-    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit " + values
+def get_temperature_data(cursor, db):
+    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit 1200"
     cursor.execute(run)
     result = cursor.fetchall()
     return result
@@ -64,5 +57,5 @@ form = cgi.FieldStorage()
 width = form.getfirst("width", "")
 int_width = int(width)
 values = getSize(int_width)
-data = get_temperatures(values)
-print create_chart(data)
+data = get_temperatures()
+print create_chart(data, values)

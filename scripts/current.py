@@ -67,17 +67,17 @@ def gas_on(temperature):
     last_on = get_value("calculated", "time", 1)
     #Check for last temperature change
     if (last_value != None):
-        #Temperature went down by 3 degrees
-        if (last_value - temperature >= 3):
-            print("temperature went down by 3")
+        #Temperature above 105
+        if (temperature > 105):
+            return ("ON", last_on)
+        #Temperature went down by 7 degrees
+        if (last_value - temperature >= 7):
+            print("temperature went down by 7")
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
             return ("ON", last_on)
-    #Temperature above 100
-    if (temperature > 100):
-        return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
         return ("MAYBE", "none")
@@ -119,12 +119,14 @@ def upload_data(temperature_f, type):
         send_notification = True
     if (not "uid" in stove_info):
         print("setting code")
-        stove_info["uid"] = 2468
+    print(datetime.datetime.now())
     code = stove_info["uid"]
+    print(code)
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
     data = str(d)
+    print(data)
     headers = {"code":code, "data":data, "command":"upload"}
-    response = requests.post("https://www.iotspace.tech/stovesensor/scripts/data_storage.py", data=headers)
+    response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
 
 if (__name__ == "__main__"):
     temperature_f = read_temp()[1]
@@ -134,4 +136,5 @@ if (__name__ == "__main__"):
     upload_estimate(type, temperature_f)
     print type
     upload_data(temperature_f, type)
+    print "\n"
 stove_info.close()

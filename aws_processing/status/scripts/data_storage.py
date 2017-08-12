@@ -7,12 +7,16 @@ import json
 import cgi
 import notification
 import random
+import datetime
+
+log = open("log.txt", "a")
+log.write("\n\nRunning at "+str(datetime.datetime.now()))
 
 def send_notifications(code, users):
     for user in users:
         notification.send_notification(str(user["number"]), code)
 
-stovesensor_data = shelve.open("stove_info.shelve", writeback= True)
+stovesensor_data = shelve.open("stove_info.data", writeback= True)
 if (not "devices" in stovesensor_data):
         stovesensor_data["devices"] = {}
 
@@ -26,12 +30,14 @@ if (command == "upload"):
     int_code = int(code)
     stovesensor_data["devices"][int_code] = json_data
     if (json_data["notification"]):
+        log.write("Sending notification to "+str(json_data["numbers"]))
         for number in json_data["numbers"]:
             notification.send_notification(number, code)
     print {"success":True}
     
 if (command == "pageload"):
-    data = stovesensor_data["devices"][code]
+    int_code = int(code)
+    data = stovesensor_data["devices"][int_code]
     j = json.dumps(data)
     print j
     
@@ -52,5 +58,5 @@ if (command == "newdevice"):
     j = json.dumps(d)
     print j
     
-    
+log.close()
 stovesensor_data.close()
