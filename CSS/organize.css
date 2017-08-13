@@ -72,9 +72,10 @@
 }
 
 #chart {
+	padding-top: 20px;
 	margin: auto;
 	display: block;
-	width: 80%;
+	width: 90%;
 	height: 70%;
 	min-width: 50%;
 }

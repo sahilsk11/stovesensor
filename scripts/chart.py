@@ -18,7 +18,7 @@ def create_chart(data, values, div_id="chart"):
     chart.color_array = []
     
     label_step = values
-    chart.setChartTagAttributes({"caption":"Stove Temperature", "labelStep":label_step})
+    chart.setChartTagAttributes({"caption":"Stove Temperature", "labelStep":label_step, "theme":"fint", "anchorRadius":1, "anchorBorderThickness":0})
     chart.addDataSeries("Temperature", data, 
                         series_attributes = {"renderAs":"column", "showValues":"0", "alpha":70})
     html = chart.getHTML(div_id, js_only=1)
