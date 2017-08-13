@@ -14,7 +14,7 @@ def getSize(width):
     return "150"
 
 def create_chart(data, values, div_id="chart"):
-    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="70%")
+    chart = fusionCharts.fusionChart(chart_type="multi_stacked_area", width="100%", height="100%")
     chart.color_array = []
     
     label_step = values

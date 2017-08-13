@@ -65,11 +65,11 @@ def upload_estimate(type, temperature):
 def gas_on(temperature):
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
+    if (temperature > 105):
+            return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
         #Temperature above 105
-        if (temperature > 105):
-            return ("ON", last_on)
         #Temperature went down by 7 degrees
         if (last_value - temperature >= 7):
             print("temperature went down by 7")
