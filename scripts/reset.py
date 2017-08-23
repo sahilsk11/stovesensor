@@ -1,4 +1,5 @@
 import MySQLdb
+import requests
 import shelve
 
 shelf = shelve.open("stove_data.shelve", writeback= True)
