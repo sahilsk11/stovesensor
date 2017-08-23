@@ -25,6 +25,8 @@ command = form.getfirst("command", "")
 code = form.getfirst("code", "")
 data = form.getfirst("data", "")
 
+log.write("command: " + command)
+
 if (command == "upload"):
     json_data = eval(data)
     int_code = int(code)
@@ -57,6 +59,7 @@ if (command == "newdevice"):
             stovesensor_data["devices"][uid] = {}
             completed = True
     d = {"success": True, "new_code":uid}
+    log.write("New device with code " + str(uid))
     j = json.dumps(d)
     print j
     
