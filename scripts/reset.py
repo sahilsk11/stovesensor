@@ -1,6 +1,7 @@
 import MySQLdb
 import requests
 import shelve
+import passwords
 
 shelf = shelve.open("stove_data.shelve", writeback= True)
 shelf["user_info"] = []
