@@ -34,7 +34,7 @@ def get_temperatures():
         row = db_data[i]
         temperature = row[0]
         time = row[1]
-        time = time.strftime("%H:%M %p, %m/%d/%y")
+        time = time.strftime("%m/%d %H:%M %p")
         data[time] = temperature
         i += 1
     return data
