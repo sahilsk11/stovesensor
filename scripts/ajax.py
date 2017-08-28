@@ -42,7 +42,7 @@ if (command == "getchart"):
     
 if (command == "load_setup"):
     code_set = (code != None and code != "")
-    d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code}
+    d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code, "on_timer":shelf["on_timer"]}
     j = json.dumps(d)
     print j
     
@@ -51,6 +51,9 @@ if (command == "set_code"):
         shelf["uid"] = int(new_code)
         
 if (command == "initial_setup"):
+    if (code == None or code == ""):
+        headers = {"command":"newdevice"}
+        response = requests.get("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", params=headers)
     phone_numbers = eval(numbers)
     for i in range(0, len(phone_numbers)):
         phone_numbers[i] = phone_numbers[i].replace("%2B", "+")

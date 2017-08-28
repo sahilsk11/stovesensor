@@ -15,8 +15,6 @@
         <script src="../js/XHRequest.js"></script>
         <script>
 
-        var codeSet = false;
-
         function checkIfCodeSet() {
             XHRequest.createRequest({
                 success: setCodeStatus,
@@ -30,19 +28,18 @@
         function setCodeStatus(xhr, xhrConfig) {
             console.log("setting up page");
             var response = JSON.parse(xhr.responseText);
-            codeSet = response.code_set
+            codeSet = response.code_set;
+            onTimer = response.on_timer;
             if (response.numbers != null && response.numbers.length != 0) {
                 console.log("Updated numbers");
                 document.getElementById("numbers").value = response.numbers;
+                document.getElementById("timer").value = onTimer;
             }
         }
 
         function submitInfo() {
             var numbers = document.getElementById("numbers").value;
             numbers_arr = parseNumbers(numbers);
-            if (!codeSet) {
-                generateCode();
-            }
             if (numbers_arr != null) {
                 uploadData(numbers_arr);
             }
@@ -59,6 +56,9 @@
                     completed = false;
                 }
                 arr[i] = arr[i].replace("+", encodeURIComponent("+"));
+                arr[i] = arr[i].replace("(", "");
+                arr[i] = arr[i].replace(")", "");
+                arr[i] = arr[i].replace("-", "");
             }
             if (completed) {
                 return arr;
@@ -81,31 +81,6 @@
             });
         }
 
-        function generateCode() {
-            XHRequest.createRequest({
-                success: saveCode,
-                params: {
-                    command: "newdevice",
-                },
-                url: "https://www.iotspace.tech/stovesensor/scripts/data_storage.py"
-            });
-        }
-
-        function saveCode(xhr, xhrConfig) {
-            var response = JSON.parse(xhr.responseText);
-            console.log(response);
-            var completed = response.success;
-            var code = response.new_code;
-            XHRequest.createRequest({
-                success: confirmUpload,
-                params: {
-                    command: "set_code",
-                    code: code
-                },
-                url: "../scripts/ajax.py"
-            });
-        }
-
         function confirmUpload() {
 
         }
@@ -121,10 +96,13 @@
         <h3 class="special-font text-center">Please enter the following information to get started.</h3>
 
         <form class="container-fluid">
-            <p>If your stove is ever left on, stovesensor will text you with alerts. For this feature, please enter the phone numbers you would like this alert to be sent to in the format +1XXXXXXXXXX with no parantheses or dashes. Seperate each phone number with a comma and include country code for each number. <br>Note: messaging fees may apply.</p>
+            <p>If your stove is ever left on, stovesensor will text you with alerts.<br>Please each phone number WITHOUT ANY PARANTHESES OR DASHES. Seperate each number with a comma (no space) <br>Note: messaging fees may apply.</p>
             <div class="form-group">
                 <label>Phone Numbers</label>
                 <input class="form-control" placeholder="Phone" id="numbers" value="+1">
+                <label>Left On Threshold</label>
+                <p>This is how many minutes your stove has to be left on before you will receive a text message.</p>
+                <input class="form-control" placeholder="20" id="timer">
             </div>
         </form>
 

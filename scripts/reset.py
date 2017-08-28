@@ -17,10 +17,10 @@ shelf["uid"] = code
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
 
-script = "DELETE * FROM calculated"
+script = "DELETE FROM calculated"
 cursor.execute(script)
 
-script = "DELETE * FROM temperatures"
+script = "DELETE FROM temperatures"
 cursor.execute(script)
 
 shelf.close()

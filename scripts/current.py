@@ -9,6 +9,8 @@ import requests
 stove_info = shelve.open("stove_data.shelve", writeback=True)
 if not ("user_info" in stove_info):
     stove_info["user_info"] = []
+if not ("on_timer" in stove_info):
+    stove_info["on_timer"] = 20
 
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
@@ -85,12 +87,12 @@ def gas_on(temperature):
     
     return ("OFF", "none")
 
-def gas_left_on(temperature, status, time=20):
+def gas_left_on(temperature, status):
     if (status == "ON"):
         last_value = get_value("calculated", "status", 1)
         if (last_value == "ON"):
             on_time = get_value("calculated", "time", 1)
-            if (datetime.datetime.now() - datetime.timedelta(minutes=time) > on_time):
+            if (datetime.datetime.now() - datetime.timedelta(minutes=stove_info["on_timer"]) > on_time):
                 return (True, on_time)
     return (False, None)
 

@@ -31,3 +31,8 @@
 	padding-top: 20px;
 	color: white;
 }
+
+.header {
+	height: 50px;
+	background-color: black;
+}
