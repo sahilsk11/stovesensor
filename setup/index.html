@@ -38,6 +38,7 @@
         }
 
         function submitInfo() {
+            document.getElementById("confirm").innerHTML = "";
             var numbers = document.getElementById("numbers").value;
             var numbers_arr = parseNumbers(numbers);
             var onTimer = document.getElementById("timer").value;
@@ -84,7 +85,7 @@
         }
 
         function confirmUpload() {
-
+            document.getElementById("confirm").innerHTML = "<h1 class='title text-center'>Update Saved</h1>";
         }
             
         </script>
@@ -99,7 +100,7 @@
 
         <form class="container-fluid">
             <p>
-                <ul>If your stove is ever left on, stovesensor will text you with alerts.<br>Please each phone number WITHOUT ANY PARANTHESES OR DASHES. Seperate each number with a comma (no space) <br>Note: messaging fees may apply.</p>
+                If your stove is ever left on, stovesensor will text you with alerts.<br>Please each phone number WITHOUT ANY PARANTHESES OR DASHES. Seperate each number with a comma (no space) <br>Note: messaging fees may apply.</p>
             <div class="form-group">
                 <label>Phone Numbers</label>
                 <input class="form-control" placeholder="Phone" id="numbers" value="+1">
@@ -110,6 +111,10 @@
         </form>
 
         <button class="btn btn-primary" onclick="submitInfo()">Submit</button>
+
+        <div id="confirm">
+
+        </div>
 
 	</body>
 </html>
