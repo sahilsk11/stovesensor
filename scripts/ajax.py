@@ -19,6 +19,7 @@ form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
 new_code = form.getfirst("code", "")
 numbers = form.getfirst("phone", "")
+new_timer = form.getfirst("timer", "")
 
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
@@ -58,6 +59,7 @@ if (command == "initial_setup"):
     for i in range(0, len(phone_numbers)):
         phone_numbers[i] = phone_numbers[i].replace("%2B", "+")
     shelf["user_info"] = phone_numbers
+    shelf["on_time"] = new_timer
     d = {"success":True}
     j = json.dumps(d)
     print j
