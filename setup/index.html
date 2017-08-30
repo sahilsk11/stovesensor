@@ -70,13 +70,13 @@
             console.log(arr);
         }
 
-        function uploadData(phone_numbers, onTimer) {
+        function uploadData(phone_numbers, timer) {
             numbers = JSON.stringify(phone_numbers);
             XHRequest.createRequest({
                 success: confirmUpload,
                 params: {
                     command: "initial_setup",
-                    timer: onTimer,
+                    timer: timer,
                     phone: numbers
                 },
                 url: "../scripts/ajax.py"
