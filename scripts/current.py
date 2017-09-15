@@ -38,9 +38,9 @@ def read_temp():
         temp_f = temp_c * 9.0 / 5.0 + 32.0
         return temp_c, temp_f
     
-def upload_value(temperature):
+def upload_value(value, table="temperatures", type="temperature"):
     time = datetime.datetime.now()
-    script = "insert into temperatures (temperature, time) values ('%d', '%s')" % (temperature, time)
+    script = "insert into " + table + " ("+type+", time) values ('%d', '%s')" % (value, time)
     cursor.execute(script)
     db.commit()
     
@@ -64,9 +64,11 @@ def upload_estimate(type, temperature):
         cursor.execute(script)
         db.commit()
 
-def gas_on(temperature):
+def gas_on(temperature, average):
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
+    if (temperature <= average+2):
+        return ("OFF", "none")
     if (temperature > 105):
             return ("ON", last_on)
     #Check for last temperature change
@@ -107,9 +109,11 @@ def can_send_notification():
         return False
 
 def average_of_temperature(hours=3):
-    script = "SELECT AVG(temperature) FROM temperatures where date > date_sub(now() - interval " + str(hours) + " hours"
+    script = "SELECT AVG(temperature) FROM temperatures where time > date_sub(now(), interval " + str(hours) + " hours)"
     cursor.execute(script)
     db.commit()
+    data = cursor.fetchone()
+    return round(float(data[0]), 2)
 
 def upload_data(temperature_f, type):
     temperature = get_value("temperatures", "temperature", 1)
@@ -139,7 +143,9 @@ if (__name__ == "__main__"):
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
-    type = gas_on(temperature_f)[0]
+    average = average_of_temperature()
+    upload_value(average, "averages", "avg")
+    type = gas_on(temperature_f, average)[0]
     upload_estimate(type, temperature_f)
     print type
     upload_data(temperature_f, type)
