@@ -106,6 +106,11 @@ def can_send_notification():
     else:
         return False
 
+def average_of_temperature(hours=3):
+    script = "SELECT AVG(temperature) FROM temperatures where date > date_sub(now() - interval " + str(hours) + " hours"
+    cursor.execute(script)
+    db.commit()
+
 def upload_data(temperature_f, type):
     temperature = get_value("temperatures", "temperature", 1)
     status = get_value("calculated", "status", 1)
