@@ -69,7 +69,7 @@ def gas_on(temperature, average):
     last_on = get_value("calculated", "time", 1)
     if (temperature <= average+2):
         return ("OFF", "none")
-    if (temperature > 105):
+    if (temperature > 105 or temperature > average + 10):
             return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
@@ -109,7 +109,7 @@ def can_send_notification():
         return False
 
 def average_of_temperature(hours=3):
-    script = "SELECT AVG(temperature) FROM temperatures where time > date_sub(now(), interval " + str(hours) + " hours)"
+    script = "SELECT AVG(temperature) FROM temperatures where time > date_sub(now(), interval " + str(hours) + " hour)"
     cursor.execute(script)
     db.commit()
     data = cursor.fetchone()
@@ -144,7 +144,7 @@ if (__name__ == "__main__"):
     upload_value(temperature_f)
     print(temperature_f)
     average = average_of_temperature()
-    upload_value(average, "averages", "avg")
+    print(average)
     type = gas_on(temperature_f, average)[0]
     upload_estimate(type, temperature_f)
     print type
