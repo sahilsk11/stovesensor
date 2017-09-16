@@ -147,8 +147,8 @@ def upload_data(temperature_f, type):
 
 if (__name__ == "__main__"):
     if (code == None or code == ""):
-        shelf["uid"] = new_code()
-        code = shelf["uid"]
+        stove_info["uid"] = new_code()
+        code = stove_info["uid"]
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
