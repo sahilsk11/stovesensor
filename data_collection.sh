@@ -1,0 +1,1 @@
+cd ~/stovesensor/scripts/;  python ~/stovesensor/scripts/current.py >> ~/stovesensor/scripts/cron.log 2>&1
