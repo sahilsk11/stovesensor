@@ -15,11 +15,21 @@ if (not "uid" in shelf):
     shelf["uid"] = None
 code = shelf["uid"]
 
+def new_code():
+    headers = {"command":"newdevice"}
+    response = requests.get("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", params=headers)
+    new_code = response.json()["new_code"]
+    return new_code
+
 form = cgi.FieldStorage()
 command = form.getfirst("command", "pageload")
 new_code = form.getfirst("code", "")
 numbers = form.getfirst("phone", "")
 new_timer = form.getfirst("timer", "")
+
+if (code == None or code == ""):
+        shelf["uid"] = new_code()
+        code = shelf["uid"]
 
 if (command == "pageload"):
     temperature = current.get_value("temperatures", "temperature", 1)
@@ -52,9 +62,6 @@ if (command == "set_code"):
         shelf["uid"] = int(new_code)
         
 if (command == "initial_setup"):
-    if (code == None or code == ""):
-        headers = {"command":"newdevice"}
-        response = requests.get("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", params=headers)
     phone_numbers = eval(numbers)
     for i in range(0, len(phone_numbers)):
         phone_numbers[i] = phone_numbers[i].replace("%2B", "+")

@@ -11,6 +11,13 @@ if not ("user_info" in stove_info):
     stove_info["user_info"] = []
 if not ("on_timer" in stove_info):
     stove_info["on_timer"] = 20
+code = stove_info["uid"]
+
+def new_code():
+    headers = {"command":"newdevice"}
+    response = requests.get("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", params=headers)
+    new_code = response.json()["new_code"]
+    return new_code
 
 db = MySQLdb.connect("localhost", "stovesensor", passwords.sql(), "stovedata")
 cursor = db.cursor()
@@ -131,7 +138,6 @@ def upload_data(temperature_f, type):
     if (not "uid" in stove_info):
         print("setting code")
     print(datetime.datetime.now())
-    code = stove_info["uid"]
     print(code)
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
     data = str(d)
@@ -140,6 +146,9 @@ def upload_data(temperature_f, type):
     response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
 
 if (__name__ == "__main__"):
+    if (code == None or code == ""):
+        shelf["uid"] = new_code()
+        code = shelf["uid"]
     temperature_f = read_temp()[1]
     upload_value(temperature_f)
     print(temperature_f)
