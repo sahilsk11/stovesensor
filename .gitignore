@@ -1,0 +1,9 @@
+passwords.py
+test.py
+*.pyc
+uid.shelve.db
+.project
+.DS_Store
+.pydevproject
+scripts/test.py
+*.db
