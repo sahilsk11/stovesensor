@@ -6,6 +6,7 @@ import math
 class RGBled:
     def __init__(self, red=23, green=25, blue=7, hz=100):
         GPIO.setmode (GPIO.BCM)
+        self.led = RGBled(23, 25, 7)
         self.red = red
         self.green = green
         self.blue = blue
@@ -76,10 +77,10 @@ class RGBled:
             pass
             
     def color_red(self):
-        led.change_colors(100,0,0)
+        self.led.change_colors(100,0,0)
         
     def color_blue(self):
-        led.change_colors(0,0,70)
+        self.led.change_colors(0,0,70)
 
 if __name__ == "__main__":
     GPIO.setmode (GPIO.BCM)
