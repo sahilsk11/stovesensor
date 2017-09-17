@@ -34,6 +34,9 @@
                 console.log("Updated numbers");
                 document.getElementById("numbers").value = response.numbers;
                 document.getElementById("timer").value = onTimer;
+                document.getElementById("loading").display = none;
+                document.getElementById("content").display = block;
+                document.getElementById("submit").display = block;                
             }
         }
 
@@ -95,10 +98,13 @@
         <img src="../Images/background.png" class="background">
         <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
         
-        <h1 class="title text-center">Welcome to StoveSensor.</h1>
-        <h3 class="special-font text-center">Please enter the following information to get started.</h3>
+        <div id="loading">
+            <h1 class="title text-center">Welcome to StoveSensor.</h1>
+            <img src="../Images/squares.gif" class="loading-gif">
+        </div>
 
-        <form class="container-fluid">
+        <form class="container-fluid hidden" id="content">
+            <h3 class="special-font text-center">Please enter the following information to get started.</h3>
             <p>
                 If your stove is ever left on, stovesensor will text you with alerts.<br>Please each phone number WITHOUT ANY PARANTHESES OR DASHES. Seperate each number with a comma (no space) <br>Note: messaging fees may apply.</p>
             <div class="form-group">
@@ -108,9 +114,10 @@
                 <p>This is how many minutes your stove has to be left on before you will receive a text message.</p>
                 <input class="form-control" placeholder="20" id="timer">
             </div>
+            
         </form>
+        <button class="btn btn-primary hidden" id="submit" onclick="submitInfo()">Submit</button>
 
-        <button class="btn btn-primary" onclick="submitInfo()">Submit</button>
 
         <div id="confirm">
 

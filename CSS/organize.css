@@ -71,6 +71,14 @@
 	font-family: 'Open Sans', sans-serif;
 }
 
+.loading-gif {
+	width: 20%;
+	min-width: 100px;
+	max-width: 200px;
+	display: block;
+	margin: auto;
+}
+
 #chart {
 	padding-top: 20px;
 	margin: auto;
