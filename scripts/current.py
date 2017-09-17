@@ -78,6 +78,7 @@ def gas_on(temperature, average):
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
     if (temperature < 70 or temperature <= average+2):
+        led.__del__()
         return ("OFF", "none")
     if (temperature > 105 or temperature > average + 10):
             led.red()
@@ -100,7 +101,7 @@ def gas_on(temperature, average):
         led.blue()
         return ("MAYBE", "none")
     #Temperature below 90
-    
+    led.__del__()
     return ("OFF", "none")
 
 def gas_left_on(temperature, status):
