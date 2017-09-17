@@ -75,10 +75,10 @@ class RGBled:
         except KeyboardInterrupt:
             pass
             
-    def red(self):
+    def color_red(self):
         led.change_colors(100,0,0)
         
-    def blue(self):
+    def color_blue(self):
         led.change_colors(0,0,70)
 
 if __name__ == "__main__":

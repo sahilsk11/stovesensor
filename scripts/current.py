@@ -81,7 +81,7 @@ def gas_on(temperature, average):
         led.__del__()
         return ("OFF", "none")
     if (temperature > 105 or temperature > average + 10):
-            led.red()
+            led.color_red()
             return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
@@ -89,16 +89,16 @@ def gas_on(temperature, average):
         #Temperature went down by 7 degrees
         if (last_value - temperature >= 10):
             print("temperature went down by 10")
-            led.blue()
+            led.color_blue()
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
-            led.red()
+            led.color_red()
             return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
-        led.blue()
+        led.color_blue()
         return ("MAYBE", "none")
     #Temperature below 90
     led.__del__()
