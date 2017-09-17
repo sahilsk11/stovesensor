@@ -33,10 +33,11 @@
             if (response.numbers != null && response.numbers.length != 0) {
                 console.log("Updated numbers");
                 document.getElementById("numbers").value = response.numbers;
-                document.getElementById("timer").value = onTimer;
-                document.getElementById("loading").display = none;
-                document.getElementById("content").display = block;
-                document.getElementById("submit").display = block;                
+            }
+            document.getElementById("timer").value = onTimer;
+            document.getElementById("loading").display = none;
+            document.getElementById("content").display = block;
+            document.getElementById("submit").display = block;                
             }
         }
 
