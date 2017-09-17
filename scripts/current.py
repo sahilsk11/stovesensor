@@ -57,7 +57,7 @@ def get_value(table, column, values):
     cursor.execute(get_information)
     values = int(values)
     previous = cursor.fetchmany(values)
-    if (previous == None):
+    if (previous == None  or len(previous) == 0):
         return None
     if (len(previous) > 1):
         return(previous[0][0], previous[1][0])
