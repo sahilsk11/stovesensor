@@ -79,6 +79,10 @@
 	margin: auto;
 }
 
+.padding-btn {
+	margin-left: 20px;
+}
+
 #chart {
 	padding-top: 20px;
 	margin: auto;
