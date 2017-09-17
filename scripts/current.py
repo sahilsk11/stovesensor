@@ -5,6 +5,7 @@ import datetime
 import passwords
 import shelve
 import requests
+import led_control
 
 stove_info = shelve.open("stove_data.shelve", writeback=True)
 if not ("user_info" in stove_info):
@@ -73,25 +74,30 @@ def upload_estimate(type, temperature):
         db.commit()
 
 def gas_on(temperature, average):
+    led = led_control()
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
-    if (temperature <= average+2):
+    if (temperature < 70 or temperature <= average+2):
         return ("OFF", "none")
     if (temperature > 105 or temperature > average + 10):
+            led.red()
             return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
         #Temperature above 105
         #Temperature went down by 7 degrees
-        if (last_value - temperature >= 7):
-            print("temperature went down by 7")
+        if (last_value - temperature >= 10):
+            print("temperature went down by 10")
+            led.blue()
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
+            led.red()
             return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
+        led.blue()
         return ("MAYBE", "none")
     #Temperature below 90
     

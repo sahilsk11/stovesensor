@@ -17,6 +17,10 @@
         <script src='/fusioncharts/js/themes/fusioncharts.theme.fint.js'></script>
         <script>
 
+            function setup() {
+                window.location = "setup";
+            }
+
             function getWidth() {
                 return window.innerWidth;
             }
@@ -146,6 +150,7 @@
 
         <p class="update-time" id="last-update">--</p>
         <p class="update-time" id="code">--</p>
+        <button class="btn btn-default" onclick="setup()">Settings</button>
 
         <div id="wait" class="loading">
             <img src="Images/squares.gif" class="wait-gif" id="wait">
