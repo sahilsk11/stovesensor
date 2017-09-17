@@ -74,7 +74,7 @@ def upload_estimate(type, temperature):
         db.commit()
 
 def gas_on(temperature, average):
-    led = led_control()
+    led = led_control.RGBled()
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
     if (temperature < 70 or temperature <= average+2):
