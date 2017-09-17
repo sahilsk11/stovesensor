@@ -6,6 +6,8 @@ import passwords
 shelf = shelve.open("stove_data.shelve", writeback= True)
 shelf["user_info"] = []
 shelf["uid"] = ""
+shelf["interval"] = 10
+shelf["on_timer"] = 20
 shelf["last_sent"] = 0
 '''
 headers = {"command":"newdevice"}
