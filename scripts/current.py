@@ -11,6 +11,8 @@ if not ("user_info" in stove_info):
     stove_info["user_info"] = []
 if not ("on_timer" in stove_info):
     stove_info["on_timer"] = 20
+if not ("interval" in stove_info):
+    stove_info["interval"] = 10    
 code = stove_info["uid"]
 
 def new_code():
@@ -108,7 +110,7 @@ def can_send_notification():
     if (not "last_sent" in stove_info):
         stove_info["last_sent"] = 0
     last_time = stove_info["last_sent"]
-    if (last_time == 0 or last_time + datetime.timedelta(minutes=5) < datetime.datetime.now()):
+    if (last_time == 0 or last_time + datetime.timedelta(minutes=stove_info["interval"]) < datetime.datetime.now()):
         stove_info["last_sent"] = datetime.datetime.now()
         return True
     else:

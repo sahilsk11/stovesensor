@@ -15,7 +15,13 @@
         <script src="../js/XHRequest.js"></script>
         <script>
 
-        function checkIfCodeSet() {
+        function hide() {
+            document.getElementById("content").style.display = "none";
+            document.getElementById("submit").style.display = "none";
+        }
+
+        function checkIfCodeSet() {                
+
             XHRequest.createRequest({
                 success: setCodeStatus,
                 params: {
@@ -28,15 +34,17 @@
         function setCodeStatus(xhr, xhrConfig) {
             console.log("setting up page");
             var response = JSON.parse(xhr.responseText);
-            codeSet = response.code_set;
-            onTimer = response.on_timer;
+            var codeSet = response.code_set;
+            var onTimer = response.on_timer;
+            var interval = response.interval;
             if (response.numbers != null && response.numbers.length != 0) {
                 console.log("Updated numbers");
                 document.getElementById("numbers").value = response.numbers;
             }
             document.getElementById("timer").value = onTimer;
+            document.getElementById("interval").value = interval;
             document.getElementById("loading").style.display = "none";
-            document.getElementById("content").style.display = "block important";
+            document.getElementById("content").style.display = "block";
             document.getElementById("submit").style.display = "block";                
         }
 
@@ -45,8 +53,9 @@
             var numbers = document.getElementById("numbers").value;
             var numbers_arr = parseNumbers(numbers);
             var onTimer = document.getElementById("timer").value;
+            var interval = document.getElementById("interval").value;
             if (numbers_arr != null) {
-                uploadData(numbers_arr, onTimer);
+                uploadData(numbers_arr, onTimer, interval);
             }
         }
 
@@ -74,14 +83,15 @@
             console.log(arr);
         }
 
-        function uploadData(phone_numbers, timer) {
+        function uploadData(phone_numbers, timer, interval) {
             numbers = JSON.stringify(phone_numbers);
             XHRequest.createRequest({
                 success: confirmUpload,
                 params: {
                     command: "initial_setup",
                     timer: timer,
-                    phone: numbers
+                    phone: numbers,
+                    interval: interval
                 },
                 url: "../scripts/ajax.py"
             });
@@ -90,11 +100,16 @@
         function confirmUpload() {
             document.getElementById("confirm").innerHTML = "<h1 class='title text-center'>Update Saved</h1>";
         }
+
+        function run() {
+            hide();
+            checkIfCodeSet();
+        }
             
         </script>
 	</head>
 
-	<body onload="checkIfCodeSet()">
+	<body onload="run()">
         <img src="../Images/background.png" class="background">
         <p class="title text-center" id="header">Stove <b class="red">Sensor</b></p>
         
@@ -103,20 +118,25 @@
             <img src="../Images/squares.gif" class="loading-gif">
         </div>
 
-        <form class="container-fluid hidden" id="content">
+        <form class="container-fluid" id="content">
             <h3 class="special-font text-center">Please enter the following information to get started.</h3>
+            <br>
             <p>
-                If your stove is ever left on, stovesensor will text you with alerts.<br>Please each phone number WITHOUT ANY PARANTHESES OR DASHES. Seperate each number with a comma (no space) <br>Note: messaging fees may apply.</p>
+                If your stove is ever left on, stovesensor will text you with alerts.<br>Please enter each phone number, seperated by a comma and starting with +1.
             <div class="form-group">
                 <label>Phone Numbers</label>
                 <input class="form-control" placeholder="Phone" id="numbers" value="+1">
+                <br>
                 <label>Left On Threshold</label>
-                <p>This is how many minutes your stove has to be left on before you will receive a text message.</p>
+                <p>This is how many minutes your stove has to be left on before you will receive the first text message.</p>
                 <input class="form-control" placeholder="20" id="timer">
+                <label>Notification Interval</label>
+                <p>If your stove is left on, it will send you a reminder every set minutes. </p>
+                <input class="form-control" placeholder="10" id="timer">
             </div>
             
         </form>
-        <button class="btn btn-primary hidden" id="submit" onclick="submitInfo()">Submit</button>
+        <button class="btn btn-primary" id="submit" onclick="submitInfo()">Submit</button>
 
 
         <div id="confirm">

@@ -13,6 +13,11 @@ shelf = shelve.open("stove_data.shelve", writeback=True)
 if (not "uid" in shelf):
     print("Shelf not found")
     shelf["uid"] = None
+if (not "on_timer" in shelf):
+    shelf["on_timer"] = 20
+if (not "interval" in shelf):
+    shelf["interval"] = 10
+
 code = shelf["uid"]
 
 def new_code():
@@ -26,6 +31,7 @@ command = form.getfirst("command", "pageload")
 new_code = form.getfirst("code", "")
 numbers = form.getfirst("phone", "")
 new_timer = form.getfirst("timer", "")
+new_interval = form.getfirst("interval", "")
 
 if (code == None or code == ""):
         shelf["uid"] = new_code()
@@ -53,7 +59,7 @@ if (command == "getchart"):
     
 if (command == "load_setup"):
     code_set = (code != None and code != "")
-    d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code, "on_timer":shelf["on_timer"]}
+    d = {"code_set":code_set, "numbers":shelf["user_info"], "code":code, "on_timer":shelf["on_timer"], "interval":shelf["interval"]}
     j = json.dumps(d)
     print j
     
@@ -67,6 +73,7 @@ if (command == "initial_setup"):
         phone_numbers[i] = phone_numbers[i].replace("%2B", "+")
     shelf["user_info"] = phone_numbers
     shelf["on_timer"] = int(new_timer)
+    shelf["interval"] = int(new_interval)
     d = {"success":True}
     j = json.dumps(d)
     print j
