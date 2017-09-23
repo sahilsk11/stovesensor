@@ -151,7 +151,6 @@ def upload_data(temperature_f, type):
 
 if (__name__ == "__main__"):
     led = led_control.RGBled()
-    led.color_green()
     if (code == None or code == ""):
         stove_info["uid"] = new_code()
         code = stove_info["uid"]
@@ -161,9 +160,12 @@ if (__name__ == "__main__"):
     average = average_of_temperature()
     print(average)
     type = gas_on(temperature_f, average)[0]
+    led.color_green()
     upload_estimate(type, temperature_f)
     print type
-    if (not upload_data(temperature_f, type)):
+    upload_complete = upload_data(temperature_f, type)
+    led.color_green()
+    if (not upload_complete):
         #cannot connect to internet
         led.color_blue()
         led.color_red(exclusive=False)
