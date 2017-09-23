@@ -24,9 +24,7 @@ class RGBled:
         GPIO.setup (red, GPIO.OUT)
         GPIO.setup (green, GPIO.OUT)
         GPIO.setup (blue, GPIO.OUT)
-        GPIO.output (red, GPIO.LOW)
-        GPIO.output (green, GPIO.LOW)
-        GPIO.output (blue, GPIO.LOW)
+        
         self.red_pwm   = GPIO.PWM (red,   hz)
         self.green_pwm = GPIO.PWM (green, hz)
         self.blue_pwm  = GPIO.PWM (blue,  hz)
