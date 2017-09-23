@@ -74,14 +74,11 @@ def upload_estimate(type, temperature):
         db.commit()
 
 def gas_on(temperature, average):
-    led = led_control.RGBled()
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
     if (temperature < 70 or temperature <= average+2):
-        led.__del__()
         return ("OFF", "none")
     if (temperature > 105 or temperature > average + 10):
-            led.color_red()
             return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
@@ -89,19 +86,15 @@ def gas_on(temperature, average):
         #Temperature went down by 7 degrees
         if (last_value - temperature >= 10):
             print("temperature went down by 10")
-            led.color_blue()
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
-            led.color_red()
             return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
-        led.color_blue()
         return ("MAYBE", "none")
     #Temperature below 90
-    led.__del__()
     return ("OFF", "none")
 
 def gas_left_on(temperature, status):
@@ -152,8 +145,12 @@ def upload_data(temperature_f, type):
     print(data)
     headers = {"code":code, "data":data, "command":"upload"}
     response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
+    if (response.status_code != 200):
+        return False
+    return True
 
 if (__name__ == "__main__"):
+    led = led_control.RGBled()
     if (code == None or code == ""):
         stove_info["uid"] = new_code()
         code = stove_info["uid"]
@@ -165,6 +162,15 @@ if (__name__ == "__main__"):
     type = gas_on(temperature_f, average)[0]
     upload_estimate(type, temperature_f)
     print type
-    upload_data(temperature_f, type)
+    if (not upload_data(temperature_f, type)):
+        #cannot connect to internet
+        led.color_green()
+    else:
+        if (type == "ON"):
+            led.color_red()
+        elif (type == "MAYBE"):
+            led.color_blue
+        else:
+            led.off()
     print "\n"
 stove_info.close()
