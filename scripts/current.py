@@ -173,7 +173,7 @@ if (__name__ == "__main__"):
         if (type == "ON"):
             led.color_red()
         elif (type == "MAYBE"):
-            led.color_blue
+            led.color_blue()
         else:
             led.off()
     print "\n"
