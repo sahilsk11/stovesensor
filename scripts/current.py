@@ -160,11 +160,11 @@ if (__name__ == "__main__"):
     average = average_of_temperature()
     print(average)
     type = gas_on(temperature_f, average)[0]
-    led.color_green()
     upload_estimate(type, temperature_f)
     print type
     upload_complete = upload_data(temperature_f, type)
     led.color_green()
+    time.sleep(0.1)
     if (not upload_complete):
         #cannot connect to internet
         led.color_blue()
