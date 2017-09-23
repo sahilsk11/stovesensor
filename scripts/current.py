@@ -151,6 +151,7 @@ def upload_data(temperature_f, type):
 
 if (__name__ == "__main__"):
     led = led_control.RGBled()
+    led.color_green()
     if (code == None or code == ""):
         stove_info["uid"] = new_code()
         code = stove_info["uid"]
@@ -164,7 +165,8 @@ if (__name__ == "__main__"):
     print type
     if (not upload_data(temperature_f, type)):
         #cannot connect to internet
-        led.color_green()
+        led.color_blue()
+        led.color_red(exclusive=False)
     else:
         if (type == "ON"):
             led.color_red()
