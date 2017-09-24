@@ -144,8 +144,9 @@ def upload_data(temperature_f, type):
     data = str(d)
     print(data)
     headers = {"code":code, "data":data, "command":"upload"}
-    response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
-    if (response.status_code != 200):
+    try:
+        response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
+    except ConnectionError:
         return False
     return True
 
