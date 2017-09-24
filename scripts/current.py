@@ -77,22 +77,29 @@ def gas_on(temperature, average):
     last_value = get_value("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = get_value("calculated", "time", 1)
     if (temperature < 70 or temperature <= average+2):
+        print("Less than 70/average")
         return ("OFF", "none")
-    if (temperature > 105 or temperature > average + 10):
+    if (temperature > 105):
+            #Temperature above 105
+            print("Greater than 105")
             return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
-        #Temperature above 105
-        #Temperature went down by 7 degrees
-        if (last_value - temperature >= 10):
-            print("temperature went down by 10")
+        #Temperature went down by 5 degrees
+        if (last_value - temperature >= 5):
+            print("temperature went down by 5")
             return ("MAYBE", "none")
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
             return ("ON", last_on)
+    if (temperature >= average+10):
+        #Greater than average
+        print("Greater than average")
+        return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
+        print("between 90 and 100")
         return ("MAYBE", "none")
     #Temperature below 90
     return ("OFF", "none")
