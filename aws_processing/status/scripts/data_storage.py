@@ -31,7 +31,7 @@ if (command == "upload"):
     json_data = eval(data)
     int_code = int(code)
     if (not int_code in stovesensor_data["devices"]):
-        stovesensor_data["devices"] = {}
+        stovesensor_data["devices"][int_code] = {}
     stovesensor_data["devices"][int_code] = json_data
     if (json_data["notification"]):
         log.write("Sending notification to "+str(json_data["numbers"]))
