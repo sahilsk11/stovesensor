@@ -13,7 +13,7 @@ if not ("user_info" in stove_info):
 if not ("on_timer" in stove_info):
     stove_info["on_timer"] = 20
 if not ("interval" in stove_info):
-    stove_info["interval"] = 10    
+    stove_info["interval"] = 10   
 code = stove_info["uid"]
 
 def new_code():
@@ -79,10 +79,6 @@ def gas_on(temperature, average):
     if (temperature < 70 or temperature <= average+2):
         print("Less than 70/average")
         return ("OFF", "none")
-    if (temperature > 105):
-            #Temperature above 105
-            print("Greater than 105")
-            return ("ON", last_on)
     #Check for last temperature change
     if (last_value != None):
         #Temperature went down by 5 degrees
@@ -96,6 +92,10 @@ def gas_on(temperature, average):
     if (temperature >= average+10):
         #Greater than average
         print("Greater than average")
+        return ("ON", last_on)
+    if (temperature > 105):
+        #Temperature above 105
+        print("Greater than 105")
         return ("ON", last_on)
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
