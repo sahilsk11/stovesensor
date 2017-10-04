@@ -88,7 +88,7 @@ def gas_on(temperature, average):
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
             print("temperature went up by 5")
-            return ("ON", last_on)
+            return ("MAYBE", "none")
     if (temperature >= average+10):
         #Greater than average
         print("Greater than average")
