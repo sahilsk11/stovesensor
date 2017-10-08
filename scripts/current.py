@@ -86,10 +86,6 @@ def gas_on(temperature, average):
         if (last_value - temperature >= 3):
             print("temperature went down by 3")
             return ("MAYBE", "none")
-        #Temperature went up by 5 degrees
-        if (temperature - last_value >= 5):
-            print("temperature went up by 5")
-            return ("ON", "none")
     if (temperature > 105):
         #Temperature above 105
         print("Greater than 105")
@@ -98,6 +94,12 @@ def gas_on(temperature, average):
         #Greater than average
         print("Greater than average")
         return ("ON", last_on)
+    if (last_value != None):
+        #Temperature went up by 5 degrees
+        if (temperature - last_value >= 5):
+            print("temperature went up by 5")
+            return ("ON", "none")
+    
     #Temperature between 100 and 90, but will happen if previous conditions are false
     if (temperature <= 100 and temperature >= 90):
         print("between 90 and 100")
