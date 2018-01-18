@@ -12,6 +12,7 @@ import datetime
 log = open("log.txt", "a")
 log.write("\n\nRunning at "+str(datetime.datetime.now()))
 
+
 def send_notifications(code, users):
     for user in users:
         notification.send_notification(str(user["number"]), code)

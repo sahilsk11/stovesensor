@@ -25,12 +25,12 @@ cursor = db.cursor()
 recent_on = 0
 
 #generate new device code
-def new_code():
+def new_id():
     headers = {"command":"newdevice"}
     response = requests.get("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", params=headers)
     #save to device
-    new_code = response.json()["new_code"]
-    return new_code
+    new_id = response.json()["new_id"]
+    return new_id
  
 #default function to read temperature data from sensor
 def read_temp_raw():
@@ -200,7 +200,7 @@ def pushto_server(temperature_f, type):
 if (__name__ == "__main__"):
     led = led_control.RGBled()
     if (code == None or code == ""):
-        stove_info["uid"] = new_code()
+        stove_info["uid"] = new_id()
         code = stove_info["uid"]
     temperature_f = read_temp()[1]
     save_temperature_value(temperature_f)

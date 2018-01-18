@@ -13,5 +13,5 @@ def send_notification(number, code):
     # Send your sms message.
     client.publish(
         PhoneNumber=number,
-        Message="Alert! Your stove may be on. To view the status, go to www.iotspace.tech/stovesensor/status/?code="+code
+        Message="Alert! Your stove may be on. View or snooze alerts below:\nwww.iotspace.tech/stovesensor/status/?code="+code
     )
