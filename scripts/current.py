@@ -93,10 +93,10 @@ def upload_estimate(type, temperature):
 def gas_on(temperature, average):
     last_value = fetch_values("temperatures", "temperature", 2)[1] #return the last calculated value
     last_on = fetch_values("calculated", "time", 1)
+    
     if (temperature < 70 or temperature <= average+2):
         print("Less than 70/average")
         return ("OFF", "none")
-    
     #Check for last temperature change
     if (last_value != None):
         #Temperature went down by 3 degrees
@@ -107,10 +107,25 @@ def gas_on(temperature, average):
         #Temperature above 105
         print("Greater than 105")
         return ("ON", last_on)
-    if (temperature >= average+10 and temperature - last_value >= 3):
-        #Greater than average
-        print("Greater than average")
-        return ("ON", last_on)
+    if (temperature >= average+10):
+        #Test corner case of low average
+        if (average <= 65 and temperature < 80):
+            #Check if temperature is increasing with average
+            if (temperature - last_value > 3):
+                #Greater than average and went up by 3
+                print("Greater than average and increasing")
+                return ("ON", last_on)
+            #If low average and not rising, stove is off
+            else:
+                print("Average is low and temperature is not rising significantly")
+        if (last_value - temperature > 0):
+            print("Greater than average and decreasing")
+            return ("MAYBE", "none")
+        if (temperature >= last_value):
+            #Greater than average final case
+            print("Greater than average and increasing")
+            return ("ON", last_on)
+        
     if (last_value != None):
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
