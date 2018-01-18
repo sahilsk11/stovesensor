@@ -98,15 +98,12 @@ def gas_on(temperature, average):
         print("Less than 70/average")
         return ("OFF", "none")
     #Check for last temperature change
-    if (last_value != None):
-        #Temperature went down by 3 degrees
-        if (last_value - temperature >= 3):
-            print("temperature went down by 3")
-            return ("MAYBE", "none")
-    if (temperature > 105):
-        #Temperature above 105
-        print("Greater than 105")
-        return ("ON", last_on)
+    if (last_value == None):
+        last_value = temperature
+    #Temperature went down by 3 degrees
+    if (last_value - temperature >= 3):
+        print("temperature went down by 3")
+        return ("MAYBE", "none")
     if (temperature >= average+10):
         #Test corner case of low average
         if (average <= 65 and temperature < 80):
@@ -125,7 +122,10 @@ def gas_on(temperature, average):
             #Greater than average final case
             print("Greater than average and increasing")
             return ("ON", last_on)
-        
+    if (temperature > 105):
+        #Temperature above 105
+        print("Greater than 105")
+        return ("ON", last_on)
     if (last_value != None):
         #Temperature went up by 5 degrees
         if (temperature - last_value >= 5):
