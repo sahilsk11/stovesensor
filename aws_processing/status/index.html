@@ -15,14 +15,13 @@
         <script src="js/XHRequest.js"></script>
         <script>
 
-            function getCode() {
+            function getCodeFromURL() {
                 var url = new URL(window.location.href);
                 var code = url.searchParams.get("code");
                 if (code == null) {
                     code = prompt("Please enter your device code.");
                     window.location=url+"?code="+code;
                 }
-                return code;
             }
 
             function getElements() {
@@ -41,18 +40,20 @@
                 var data = JSON.parse(xhr.responseText);
                 if (data.hasOwnProperty("success")) {
                     if (!data["success"]) {
-                        code = prompt("The code was not found. Please try again.");
-                        window.location=url+"?code="+code;
+                        var code = prompt("The code was not found. Please try again.");
+                        location.href = location.origin + location.pathname + '?code='+code;
                     }
                 }
-                var temperature = data.temperature;
-                var status = data.status;
-                var lastoff = data.on_time;
-                var updatetime = data.update_time;
-                var code = data.code;
-                loadPageStyle(temperature, status, lastoff);
-                displayUpdateTime(updatetime);
-                displayCode(code);
+                else {
+                    var temperature = data.temperature;
+                    var status = data.status;
+                    var lastoff = data.on_time;
+                    var updatetime = data.update_time;
+                    var code = data.code;
+                    loadPageStyle(temperature, status, lastoff);
+                    displayUpdateTime(updatetime);
+                    displayCode(code);
+                }
             }
 
             function loadPageStyle(temperature, status, lastoff) {
