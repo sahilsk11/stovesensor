@@ -17,6 +17,8 @@ if (not "on_timer" in shelf):
     shelf["on_timer"] = 20
 if (not "interval" in shelf):
     shelf["interval"] = 10
+if (not "blink" in shelf):
+    shelf["blink"] = True
 
 code = shelf["uid"]
 

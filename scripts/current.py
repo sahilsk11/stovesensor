@@ -13,9 +13,9 @@ stove_info = shelve.open("stove_data.shelve", writeback=True)
 if not ("user_info" in stove_info):
     stove_info["user_info"] = []
 if not ("on_timer" in stove_info):
-    stove_info["on_timer"] = 20
+    stove_info["on_timer"] = 30
 if not ("interval" in stove_info):
-    stove_info["interval"] = 10   
+    stove_info["interval"] = 60   
 code = stove_info["uid"]
 
 #connect to Raspi server
