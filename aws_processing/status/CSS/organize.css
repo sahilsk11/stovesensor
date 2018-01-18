@@ -5,6 +5,10 @@
 	right: 0px;
 }
 
+.center-div {
+	margin: 0px auto;
+}
+
 .background {
 	position: absolute;
 	top: 0px;

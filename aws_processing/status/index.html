@@ -14,8 +14,7 @@
 
         <script src="js/XHRequest.js"></script>
         <script>
-
-            function getCodeFromURL() {
+            function getCode() {
                 var url = new URL(window.location.href);
                 var code = url.searchParams.get("code");
                 if (code == null) {
@@ -134,6 +133,12 @@
             <p id="stat" width="50%" class="text-center status"></p>
             <p class="update-time" id="last-update"></p>
             <p class="update-time" id="code"></p>
+            <button class="btn btn-default center hidden">Snooze Notifications</button>
+            <br>
+            <div class="col-xs-2 input-group center-div">
+                <input class="form-control col-xs-3 center" placeholder="30"><span class="input-group-addon">min</span>
+            </div>
+
         </div>
 
         <div id="wait" class="loading">
