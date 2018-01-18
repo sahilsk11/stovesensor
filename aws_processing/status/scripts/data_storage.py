@@ -42,7 +42,10 @@ if (command == "upload"):
     
 if (command == "pageload"):
     int_code = int(code)
-    data = stovesensor_data["devices"][int_code]
+    if (not int_code in stovesensor_data["devices"]):
+        data = {"success":False}
+    else:
+        data = stovesensor_data["devices"][int_code]
     j = json.dumps(data)
     print j
     

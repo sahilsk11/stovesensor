@@ -39,6 +39,12 @@
 
             function setElements(xhr, xhrConfig) {
                 var data = JSON.parse(xhr.responseText);
+                if (data.hasOwnProperty("success")) {
+                    if (!data["success"]) {
+                        code = prompt("The code was not found. Please try again.");
+                        window.location=url+"?code="+code;
+                    }
+                }
                 var temperature = data.temperature;
                 var status = data.status;
                 var lastoff = data.on_time;
