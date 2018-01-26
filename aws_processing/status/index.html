@@ -17,30 +17,49 @@
             function getCode() {
                 var url = new URL(window.location.href);
                 var code = url.searchParams.get("code");
+                console.log(code);
                 if (code == null) {
                     code = prompt("Please enter your device code.");
                     window.location=url+"?code="+code;
                 }
+                return code;
+            }
+
+            function parseCode(code) {
+                while (code.length > 0) {
+                    var letter = code.substring(0, 1);
+                    var ascii = letter.charCodeAt(0);
+                    if (!(ascii >= 48 && ascii <= 57)) {
+                        return false;
+                    }
+                    code = code.substring(1);
+                }
+                return true;
             }
 
             function getElements() {
                 var code = getCode();
-                XHRequest.createRequest({
-                    success: setElements,
-                    params: {
-                        code: code,
-                        command: "pageload"
-                    },
-                    url: "scripts/data_storage.py"
-                });
+                var validCode = parseCode(code);
+                if (validCode) {
+                    XHRequest.createRequest({
+                        success: setElements,
+                        params: {
+                            code: code,
+                            command: "pageload"
+                        },
+                        url: "scripts/data_storage.py"
+                    });
+                }
+                else {
+                    askForCodeAgain();
+                }
             }
 
             function setElements(xhr, xhrConfig) {
                 var data = JSON.parse(xhr.responseText);
                 if (data.hasOwnProperty("success")) {
                     if (!data["success"]) {
-                        var code = prompt("The code was not found. Please try again.");
-                        location.href = location.origin + location.pathname + '?code='+code;
+                        askForCodeAgain();
                     }
                 }
                 else {
@@ -53,6 +72,11 @@
                     displayUpdateTime(updatetime);
                     displayCode(code);
                 }
+            }
+
+            function askForCodeAgain() {
+                var code = prompt("The code was not found. Please try again.");
+                location.href = location.origin + location.pathname + '?code='+code;
             }
 
             function loadPageStyle(temperature, status, lastoff) {
@@ -112,8 +136,20 @@
                 }
             }
 
+            function intializeSnooze() {
+                console.log("snoozing");
+                document.getElementById("snooze-btn").classList.add("hidden");
+                document.getElementById("snooze-form").classList.remove("hidden");
+                document.getElementById("snooze-confirm").classList.remove("hidden");
+
+            }
+
             function showData() {
                 document.getElementById("wait").hidden = "none";
+            }
+
+            function confirmSnooze() {
+                
             }
 
             function run() {
@@ -133,12 +169,14 @@
             <p id="stat" width="50%" class="text-center status"></p>
             <p class="update-time" id="last-update"></p>
             <p class="update-time" id="code"></p>
-            <button class="btn btn-default center hidden">Snooze Notifications</button>
+            <!--<button class="btn btn-default center" onclick="intializeSnooze()" id="snooze-btn">Snooze Notifications</button>
             <br>
-            <div class="col-xs-2 input-group center-div">
-                <input class="form-control col-xs-3 center" placeholder="30"><span class="input-group-addon">min</span>
+            <div class="col-xs-2 input-group center-div hidden" id="snooze-form">
+                <input class="form-control center" placeholder="30">
+                <span class="input-group-addon">min</span>
             </div>
-
+            <button id="snooze-confirm" class="btn btn-sm btn-default center hidden" onclick="confirmSnooze()">Snooze</button>
+            -->
         </div>
 
         <div id="wait" class="loading">
