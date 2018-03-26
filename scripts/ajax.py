@@ -5,7 +5,6 @@ print "Content-type: application/json\n\n"
 import cgi
 import json
 import datetime
-import current
 import shelve
 import requests
 
@@ -40,16 +39,9 @@ if (code == None or code == ""):
         code = shelf["uid"]
 
 if (command == "pageload"):
-    temperature = current.fetch_values("temperatures", "temperature", 1)
-    status = current.fetch_values("calculated", "status", 1)
-    if (status == "ON"):
-        on_time = current.fetch_values("calculated", "time", 1)
-        on_time = on_time.strftime("%I:%M %p")
-    else:
-        on_time = "none"
-    time = current.fetch_values("temperatures", "time", 1)
-    time = time.strftime("%I:%M %p on %m/%d/%y")
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code}
+    temperature = shelf["last_update"]["temperature"]
+    status = shelf["last_update"]["status"]
+    d = {"temperature":temperature, "status": status, "on_time":shelf["on_time"], "update_time":shelf["update_time"], "code":code}
     j = json.dumps(d)
     print j
     

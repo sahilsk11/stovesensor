@@ -41,7 +41,7 @@ def get_temperatures():
         
     
 def get_temperature_data(cursor, db):
-    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit 1200"
+    run = "SELECT temperature, time from stovedata.temperatures order by time desc limit 120"
     cursor.execute(run)
     result = cursor.fetchall()
     return result

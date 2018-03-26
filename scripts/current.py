@@ -171,26 +171,33 @@ def average_of_temperature(hours=3):
     data = cursor.fetchone()
     return round(float(data[0]), 2)
 
-def pushto_server(temperature_f, type):
-    temperature = fetch_values("temperatures", "temperature", 1)
-    status = fetch_values("calculated", "status", 1)
-    if (status == "ON"):
-        on_time = fetch_values("calculated", "time", 1)
-        on_time = on_time.strftime("%I:%M %p")
+def update_shelve(temperature_f, type):
+    if (type == "ON"):
+        #Find the last value
+        on_time_datetime = fetch_values("calculated", "time", 1)
+        on_time_str = on_time_datetime.strftime("%I:%M %p")
     else:
-        on_time = "none"
-    time = fetch_values("temperatures", "time", 1)
-    time = time.strftime("%I:%M %p on %m/%d/%y")
+        on_time_str = "none"
+    #Convert last time of temperature into datetime str
+    time_datetime = fetch_values("temperatures", "time", 1)
+    time_str = time_datetime.strftime("%I:%M %p on %m/%d/%y")
+    
+    #Begin check to see if notification should be sent
     send_notification = False
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notification = True
+        
     if (not "uid" in stove_info):
         print("setting code")
     print(datetime.datetime.now())
     print(code)
+    
     d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
-    data = str(d)
-    print(data)
+    stove_info["last_update"] = d
+
+#Pushes last update to server
+def pushto_server():
+    data = str(stove_info["last_update"])
     headers = {"code":code, "data":data, "command":"upload"}
     try:
         response = requests.post("https://www.iotspace.tech/stovesensor/status/scripts/data_storage.py", data=headers)
