@@ -218,7 +218,8 @@ if (__name__ == "__main__"):
     type = gas_on(temperature_f, average)[0]
     upload_estimate(type, temperature_f)
     print type
-    upload_complete = pushto_server(temperature_f, type)
+    update_shelve(temperature_f, type)
+    upload_complete = pushto_server()
     led.color_green()
     time.sleep(0.1)
     if (not upload_complete):
