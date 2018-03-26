@@ -101,21 +101,22 @@ def gas_on(temperature, average):
     if (last_value == None):
         last_value = temperature
     #Temperature went down by 3 degrees
-    if (last_value - temperature >= 3):
+    if (last_value - temperature >= 7):
         print("temperature went down by 3")
         return ("MAYBE", "none")
     if (temperature >= average+10):
         #Test corner case of low average
         if (average <= 65 and temperature < 80):
             #Check if temperature is increasing with average
-            if (temperature - last_value > 3):
+            if (temperature - last_value > 7):
                 #Greater than average and went up by 3
                 print("Greater than average and increasing")
                 return ("ON", last_on)
             #If low average and not rising, stove is off
             else:
                 print("Average is low and temperature is not rising significantly")
-        if (last_value - temperature > 0):
+        
+        if (last_value - temperature > 5):
             print("Greater than average and decreasing")
             return ("MAYBE", "none")
         if (temperature >= last_value):
