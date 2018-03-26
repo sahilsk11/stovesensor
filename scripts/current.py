@@ -119,7 +119,7 @@ def gas_on(temperature, average):
         if (last_value - temperature > 5):
             print("Greater than average and decreasing")
             return ("MAYBE", "none")
-        if (temperature >= last_value):
+        if (temperature >= last_value - 3):
             #Greater than average final case
             print("Greater than average and increasing")
             return ("ON", last_on)
