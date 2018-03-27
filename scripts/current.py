@@ -181,7 +181,7 @@ def update_shelve(temperature_f, status):
     else:
         on_time_str = "none"
     #Convert last time of temperature into datetime str
-    time_datetime = fetch_values("temperatures", "time", 1)
+    time_datetime = fetch_values("temperatures", "time", 1)[0]
     time_str = time_datetime.strftime("%I:%M %p on %m/%d/%y")
     
     #Begin check to see if notification should be sent
