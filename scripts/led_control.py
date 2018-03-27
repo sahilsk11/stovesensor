@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 
 import time
-
 import math
 
 
@@ -102,6 +101,21 @@ class RGBled:
         GPIO.output (self.red, GPIO.LOW)
         GPIO.output (self.green, GPIO.LOW)
         GPIO.output (self.blue, GPIO.LOW)
+        
+    def run_led(self, success, status):
+        self.color_green()
+        time.sleep(0.1)
+        if (not success):
+            #cannot connect to internet
+            color_blue()
+            color_red(exclusive=False)
+        else:
+            if (status == "ON"):
+                self.color_red()
+            elif (status == "MAYBE"):
+                self.color_blue()
+            else:
+                self.off()
 
 if __name__ == "__main__":
     GPIO.setmode (GPIO.BCM)

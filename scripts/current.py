@@ -217,8 +217,8 @@ if (__name__ == "__main__"):
     save_temperature_value(temperature_f)
     upload_estimate(status, temperature_f)
     
-    print("AVERAGE: " + average)
-    print("TEMPERATURE: " + temperature_f)
+    print("AVERAGE: " + str(average))
+    print("TEMPERATURE: " + str(temperature_f))
     print(datetime.datetime.now())
     print(code)
     print(status)
