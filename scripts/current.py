@@ -1,5 +1,4 @@
 import glob
-import time
 import MySQLdb
 import datetime
 import passwords
@@ -65,16 +64,14 @@ def save_temperature_value(value, table="temperatures", type="temperature"):
 #return a set number of values from the db
 #return FIX THIS
 def fetch_values(table, column, values):
-    values = str(values)
-    get_information = "SELECT " + column + " from stovedata." + table + " order by time desc limit " + str(values)
-    cursor.execute(get_information)
-    values = int(values)
+    str_values = str(values)
+    db_command = "SELECT " + column + " from stovedata." + table + " order by time desc limit " + str(values)
+    cursor.execute(db_command)
     previous = cursor.fetchmany(values)
-    if (previous == None  or len(previous) == 0):
-        return None
-    if (len(previous) > 1):
-        return(previous[0][0], previous[1][0])
-    return previous[0][0]
+    arr_values = []
+    for tuple in previous:
+        arr_values.append(tuple[0])
+    return arr_values
     
 #Upload a new value IF the type changed
 #Type would be 'ON', 'OFF', or 'MAYBE'
@@ -87,12 +84,17 @@ def upload_estimate(type, temperature):
         cursor.execute(script)
         db.commit()
 
+def trend_analysis():
+    trend_arr = fetch_values("temperatures", "temperature", 3)
+    
 #Core of the device
 #Calculated whether the stove is on or not
 #This method is constantly updated after tests are conducted
 def gas_on(temperature, average):
-    last_value = fetch_values("temperatures", "temperature", 2)[1] #return the last calculated value
+    last_value = fetch_values("temperatures", "temperature", 1)[0] #return the last calculated value
     last_on = fetch_values("calculated", "time", 1)
+    
+    
     
     if (temperature < 70 or temperature <= average+2):
         print("Less than 70/average")
@@ -171,7 +173,7 @@ def average_of_temperature(hours=3):
     data = cursor.fetchone()
     return round(float(data[0]), 2)
 
-def update_shelve(temperature_f, type):
+def update_shelve(temperature_f, status):
     if (type == "ON"):
         #Find the last value
         on_time_datetime = fetch_values("calculated", "time", 1)
@@ -186,13 +188,8 @@ def update_shelve(temperature_f, type):
     send_notification = False
     if (gas_left_on(temperature_f, type)[0] and can_send_notification()):
         send_notification = True
-        
-    if (not "uid" in stove_info):
-        print("setting code")
-    print(datetime.datetime.now())
-    print(code)
     
-    d = {"temperature":temperature, "status": status, "on_time":on_time, "update_time":time, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
+    d = {"temperature":temperature_f, "status": status, "on_time":on_time_str, "update_time":time_str, "code":code, "notification":send_notification, "numbers":stove_info["user_info"]}
     stove_info["last_update"] = d
 
 #Pushes last update to server
@@ -207,31 +204,29 @@ def pushto_server():
 
 if (__name__ == "__main__"):
     led = led_control.RGBled()
-    if (code == None or code == ""):
+    if (code == None or code == ""):       
         stove_info["uid"] = new_id()
         code = stove_info["uid"]
+        print("setting code")
+    
     temperature_f = read_temp()[1]
-    save_temperature_value(temperature_f)
-    print(temperature_f)
     average = average_of_temperature()
-    print(average)
-    type = gas_on(temperature_f, average)[0]
-    upload_estimate(type, temperature_f)
-    print type
-    update_shelve(temperature_f, type)
+    status = gas_on(temperature_f, average)[0]
+    
+    #Publish to local db
+    save_temperature_value(temperature_f)
+    upload_estimate(status, temperature_f)
+    
+    print("AVERAGE: " + average)
+    print("TEMPERATURE: " + temperature_f)
+    print(datetime.datetime.now())
+    print(code)
+    print(status)
+    
+    update_shelve(temperature_f, status)
     upload_complete = pushto_server()
-    led.color_green()
-    time.sleep(0.1)
-    if (not upload_complete):
-        #cannot connect to internet
-        led.color_blue()
-        led.color_red(exclusive=False)
-    else:
-        if (type == "ON"):
-            led.color_red()
-        elif (type == "MAYBE"):
-            led.color_blue()
-        else:
-            led.off()
+    
+    led_control.run_led(upload_complete, status)
+    
     print "\n"
 stove_info.close()
