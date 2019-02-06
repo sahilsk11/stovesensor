@@ -1,6 +1,15 @@
 .icon-header {
+	height: 100vh;
 	width: 100%;
 	padding-bottom: 50px;
+}
+
+.background {
+	height: 100vh;
+	width: 100%;
+	background-image: url(../Images/stove-background.png);
+	background-size: cover;
+	background-position: center;
 }
 
 .title-font {
@@ -8,17 +17,36 @@
 }
 
 .header-text {
-	position: absolute;
+	margin-top: 0px;
+	padding-top: 20%;
 	color: white;
-	right: 10px;
-	top: 20%;
-	font-size: 5vw;
+	font-size: 80px;
+}
+
+@media screen and (max-width: 601px) {
+  .header-text {
+    font-size: 60px;
+  }
+  p {
+  	font-size: 30px;
+  }
+
+  .lead {
+  	font-size: 16px;
+  }
+}
+
+@media screen and (max-width: 559px) {
+  .header-text {
+    font-size: 50px;
+  }
 }
 
 .footer {
+	padding: 30px;
 	background-color: black;
-	height: 150px;
 	width: 100%;
+	border-bottom: -30px;
 }
 
 .iot-btn {
@@ -35,4 +63,92 @@
 .header {
 	height: 50px;
 	background-color: black;
+}
+
+.black-container {
+	margin-top: 0px;
+	padding-top: 30px;
+	background-color: #090B08;
+	color: #d1d1d1;
+	min-height: 100vh;
+}
+
+.wood-backdrop {
+	margin-top: 0px;
+	padding-top: 30px;
+	padding-bottom: 40px;
+	background-image: url(../Images/backdrop.jpg);
+	background-position: top;
+	position: relative;
+	min-height: 100vh;
+	height: auto;
+	overflow: auto;
+	background-size: cover;
+}
+
+.center {
+	display: block;
+	margin: 0px auto;
+	text-align: center;
+}
+
+.fluid {
+	padding-bottom: 100px;
+}
+
+.section-img {
+	position: relative;
+	padding-top: 20%;
+	width: 80%;
+	display: block;
+	margin: 0px auto;
+}
+
+.content {
+	padding-top: 10vh;
+}
+
+.small-content {
+	padding-top: 20%;
+}
+
+.white-container {
+	min-height: 100vh;
+	height: auto;
+}
+
+.mockup {
+	position: absolute;
+	max-width: 330px;
+	bottom: 70px;
+	top: 500px;
+	left: 20%;
+}
+
+.instructions {
+	position: absolute;
+	max-width: 450px;
+	min-width: 350px;
+	width: 40%;
+	top: 20;
+	right: 5%;
+}
+
+@media screen and (max-width: 501px) {
+  .mockup {
+  	position: relative;
+  	width: 200px;
+  	margin: 0px auto;
+  	display: block;
+  	padding: 0px
+  }
+
+  .instructions {
+  	position: relative;
+  	width: 200px;
+  	margin: 0px auto;
+  	display: block;
+	padding: 0px
+
+  }
 }

@@ -16,36 +16,60 @@
 	</head>
 
 	<body>
-        <div class="header">
+        <!--<div class="header">
             <p class="title-font white text-center lead">Already have a stovesensor? <a href="status">Log in here.</a></p>
+        </div>-->
+        <div class="background">
+            <!--<img src="Images/background.jpg" class="icon-header">-->
+            <h1 class="text-center title-font header-text">NEVER LEAVE YOUR<br> STOVE ON AGAIN.</h1>
         </div>
-        <img src="Images/background.jpg" class="icon-header">
-        <h1 class="text-center title-font header-text">NEVER LEAVE YOUR STOVE ON AGAIN.</h1>
         
-        <div class="container fluid">
-            <h3 class="title-font">LET'S FACE IT.</h3>
-            <p class="lead">
-                Leaving the stove on is a problem everyone homeowner faces. It's too easy to do: one second you have your dinner on the stove, then you go to the bathroom, then step out to grab groceries. Next thing you know, you're back home with the smell of burned food in every room and smoke setting of the fire alarm.
-                <br><br>
-                Even worse is not remembering if you turned it on or off. You could be anywhere - your yoga class, at a dinner with friends, on your first date - and suddenly the question hits you: did I turn off the stove? <a target="_blank" href="https://media.giphy.com/media/3og0IM1SoMQ3oF7pmM/source.gif">Deadpool fans will recall that he certainly did not remember.</a>
-                <br><br>
-                The reality is that we're living in a fast-paced and always on the move age, and having to stress over silly things like leaving the stove on shouldn't be any homeowner's worry. So get your stovesensor today, and never have to worry about it again.
-            </p>
+        
+        <div class="black-container fluid">
+            <div class="container content">
+                <h1 class="title-font text-center">LET'S FACE IT.</h3>
+                <div class="col-md-6">
+                    <p class="lead">
+                        Leaving the stove on is a problem everyone homeowner faces. It's too easy to do: one second you have your dinner on the stove, then you go to the bathroom, then step out to grab groceries. Next thing you know, you're back home with the smell of burned food in every room and smoke setting of the fire alarm.
+                        <br><br>
+                        Even worse is not remembering if you turned it on or off. You could be anywhere - your yoga class, at a dinner with friends, on your first date - and suddenly the question hits you: did I turn off the stove? <a target="_blank" href="https://media.giphy.com/media/3og0IM1SoMQ3oF7pmM/source.gif">Deadpool fans will recall that he certainly did not remember.</a>
+                        <br><br>
+                        The reality is that we're living in a fast-paced and always on the move age, and having to stress over silly things like leaving the stove on shouldn't be any homeowner's worry.
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <img src="Images/flame.png" class="section-img">
+                </div>
+            </div>
+        </div>  
+
+        <div class="white-container fluid">
+            <div class="container content">
+                <h1 class="title-font text-center">HOW IT WORKS</h1>
+                <div class="col-md-6">
+                    <img src="Images/device-stovesensor.jpg" class="section-img">
+                </div>
+                <div class="col-md-6">
+                    <p class="lead small-content">
+                        StoveSensor runs on a Rapsberry Pi, and uses a temperature sensor to monitor for fluctuations over time. It sits in the vent area above the stove to get readings from all of the stove heads. It constantly saves this information (but never uploads full history, for those of you concerned with privacy) and only sends the last recorded value to the database so you can view the status from anywhere.
+                    </p>
+                </div>
+            </div>
         </div>
 
-        <div class="container fluid">
-            <h3 class="title-font">HOW IT WORKS</h3>
-            <p class="lead">
-                Stovesensor runs on a Rapsberry Pi, and uses a temperature sensor to monitor for fluctuations over time. It sits in the vent area above the stove to get readings from all of the stove heads. It constantly saves this information (but never uploads full history, for those of you concerned with privacy) and only sends the last recorded value to the database so you can view the status from anywhere.
-            </p>
+        <div class="wood-backdrop fluid">
+            <div class="container">
+                <img src="Images/mockup.png" class="mockup">
+                <img src="Images/product.png" class="instructions">
+            </div>
         </div>
 
-        <div class="container fluid">
+        <!--<div class="container fluid">
             <h3 class="title-font">WHAT ARE YOU WAITING FOR?</h3>
             <p class="lead">
                 Buy your stovesensor today. Pay $20 and use it for one month, and if you love it, pay another $20 and use it forever. If not, you can always give it back. To purchase yours, send an email to <a href="mailto:iotspace.tech@gmail.com">iotspace.tech@gmail.com</a> with your name and phone number.
             </p>
-        </div>
+        </div>-->
 
         <div class="footer">
             <a href="../"><button class="btn btn-primary iot-btn">back to IoT Space</button></a>
