@@ -4,20 +4,34 @@ class StoveCenter extends React.Component {
         this.state = { temperature: "73", status: "ON" }
     }
 
+    renderStateColor() {
+        if (this.state.status == "ON") {
+            return "on-color";
+        } else {
+            return "off-color";
+        }
+    }
+
     render() {
         return (
             <div className="full-size-container">
                 <div className="row">
                     <div className="column col-md-6">
-                        <div class="col-container">
-                            <StoveIcon status={this.state.status} />
-                            <h1 className="title status">stove is {this.state.status.toLowerCase()}</h1>
-                        </div>
+                        <StoveIcon status={this.state.status} />
+                        <h1 className="title status">
+                            stove is
+                            <span className={this.renderStateColor()}>
+                                <strong>{" " + this.state.status.toLowerCase() + " "}</strong>
+                            </span>
+                            at {this.state.temperature}° F
+                        </h1>
                     </div>
                     <div className="column col-md-6 right-column">
                         <RecentActivityContainer />
                     </div>
                 </div>
+                <h5 className="update-time"><em>Last Updated at 3:44 AM</em></h5>
+                <img src="img/settings.png" className="settings" />
             </div >
         );
     }
