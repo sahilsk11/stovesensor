@@ -77,7 +77,7 @@ def fetch_values(table, column, values):
 #Type would be 'ON', 'OFF', or 'MAYBE'
 def upload_estimate(type, temperature):
     #Return the last value to check if type changed
-    previous = fetch_values("calculated", "status", 1)
+    previous = fetch_values("calculated", "status", 1)[0]
     if (previous == None or previous != type):
         time = datetime.datetime.now()
         script = "insert into calculated (status, time, temperature) values ('%s', '%s', '%d')" % (type, time, temperature)
@@ -92,7 +92,7 @@ def trend_analysis():
 #This method is constantly updated after tests are conducted
 def gas_on(temperature, average):
     last_value = fetch_values("temperatures", "temperature", 1)[0] #return the last calculated value
-    last_on = fetch_values("calculated", "time", 1)
+    last_on = fetch_values("calculated", "time", 1)[0]
     
     
     
@@ -226,7 +226,7 @@ if (__name__ == "__main__"):
     update_shelve(temperature_f, status)
     upload_complete = pushto_server()
     
-    led_control.run_led(upload_complete, status)
+    led_.run_led(upload_complete, status)
     
     print "\n"
 stove_info.close()

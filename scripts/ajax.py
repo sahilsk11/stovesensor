@@ -39,12 +39,9 @@ if (code == None or code == ""):
         code = shelf["uid"]
 
 if (command == "pageload"):
-    print(1)
     temperature = shelf["last_update"]["temperature"]
     status = shelf["last_update"]["status"]
-    print(2)
     d = {"temperature":temperature, "status": status, "on_time":shelf["last_update"]["on_time"], "update_time":shelf["last_update"]["update_time"], "code":code}
-    print(3)
     j = json.dumps(d)
     print j
     
